@@ -18,11 +18,15 @@ package com.dzuvan.forum.controller;
 
 import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.service.SubforumServiceImpl;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -32,7 +36,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 /**
  *
  * @author dzuvan
@@ -64,7 +69,7 @@ public class SubforumController {
      * @return
      */
     @GET
-    @Path("/subforums/{id}")
+    @Path("/subforums/subforum/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSubforumById(@PathParam("id") Integer id) {
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
@@ -85,7 +90,7 @@ public class SubforumController {
      * @return
      */
     @GET
-    @Path("/subforums/sf/{name}")
+    @Path("/subforums/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSubforumByName(@PathParam("name") String name) {
         Subforum subforum = SubforumServiceImpl.getInstance().getByString(name);
@@ -107,18 +112,21 @@ public class SubforumController {
      * @param description
      * @param icon
      * @param rules
+     * @param fileData
      * @return
      */
     @POST
     @Path("/subforums")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response addSubforum(@FormParam("name") String name,
-                                @FormParam("description") String description,
-                                @FormParam("icon") byte[] icon,
-                                @FormParam("rules") List<String> rules) {
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response addSubforum(@FormDataParam("name") String name,
+                                @FormDataParam("description") String description,
+                                @FormDataParam("icon") InputStream icon,
+                                @FormDataParam("rules") String rules,
+                                @FormDataParam("icon") FormDataContentDisposition fileData) {
 
-        Subforum subforum = new Subforum(name, description, icon, rules, null ,null);
+        Subforum subforum = new Subforum(name, description, rules, icon);
+        String location = System.getProperty("user.dir") + fileData.getFileName();
+        writeToFile(icon, location);
         SubforumServiceImpl.getInstance().addOne(subforum);
         return  Response.status(Response.Status.CREATED)
                         .entity(subforum)
@@ -132,35 +140,37 @@ public class SubforumController {
      *
      * @param name
      * @param description
-     * @param icon
      * @param rules
+     * @param icon
+     * @param fileData
      * @return
      */
     @PUT 
     @Path("/subforums")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response updateSubforum(@FormParam("name") String name,
-                                @FormParam("description") String description,
-                                @FormParam("icon") byte[] icon,
-                                @FormParam("rules") List<String> rules) {
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response updateSubforum(@FormDataParam("name") String name,
+                                @FormDataParam("description") String description,
+                                @FormDataParam("rules") String rules,
+                                @FormDataParam("icon") InputStream icon,
+                                @FormDataParam("icon") FormDataContentDisposition fileData) {
           
-        Subforum subforum = new Subforum(name, description, icon, rules, null ,null);
-        if(subforum.getId() != -1) {
+        Subforum subforum = new Subforum(name, description, rules, icon);
+        if (subforum.getId() == 0) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .allow("OPTIONS")
+                    .build();
+        } else {
             SubforumServiceImpl.getInstance().edit(subforum, subforum.getId());
             return Response.status(Response.Status.OK)
-                        .entity(subforum)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
-        }    else {
-                return Response.status(Response.Status.NO_CONTENT)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
-            }
+                    .entity(subforum)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .allow("OPTIONS")
+                    .build();
+        }
     }
 
     /**
@@ -201,4 +211,22 @@ public class SubforumController {
     public String getSupportedOperations () {
     return "<operations>GET, PUT, POST, DELETE</operations>";
     }
+
+    private void writeToFile(InputStream uploadedInputStream,
+		String uploadedFileLocation) {
+        
+		try {
+			OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			out = new FileOutputStream(new File(uploadedFileLocation));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
+			}
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+		}
+	}
 }

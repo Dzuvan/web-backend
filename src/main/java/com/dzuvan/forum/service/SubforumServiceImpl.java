@@ -131,12 +131,14 @@ public class SubforumServiceImpl implements SubforumService {
         foundSubforum = sf.stream().filter(s->s.getName().equals(subforum.getName()))
                                   .findFirst()
                                   .orElse(null);
-        if (!foundSubforum.getName().equals(subforum.getName()))  {
-                sf.add(subforum);
-                saveSubforumList(subforums);
-                return true;
-        } else 
+        if (foundSubforum == null)  return false; 
+        else if (foundSubforum.getName().equals(subforum.getName())) {
             return false;
+        } else {
+            sf.add(subforum);
+            saveSubforumList(subforums);
+            return true;
+        }
     }
     
     @Override
@@ -145,7 +147,6 @@ public class SubforumServiceImpl implements SubforumService {
     }
     
     public final void init() {
-        subforums.add(new Subforum("forum1", "description1", null, null,
-                UserServiceImpl.getInstance().getByString("mode"), null)) ;
+        subforums.add(new Subforum("forum1", "description1", null, null)) ;
     }
 }

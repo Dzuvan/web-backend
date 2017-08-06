@@ -17,7 +17,7 @@
 
 package com.dzuvan.forum.model;
 
-import java.util.Arrays;
+import java.io.InputStream;
 import java.util.List;
 /**
  *
@@ -29,8 +29,8 @@ public class Subforum {
     private static Integer nextId = 1;
     private String name;
     private String description;
-    private byte[] icon;
-    private List<String> rules;
+    private InputStream icon;
+    private String rules;
     private UserModel responsibleModerator;
     private List<UserModel> moderators;
 
@@ -38,31 +38,36 @@ public class Subforum {
         id = nextId;
         nextId++;
     }
-    public Subforum(String name){
-        this();  
+
+    /**
+     *
+     * @param name
+     * @param description
+     * @param rules
+     */
+    public Subforum (String name, String description, String rules) { 
+        this();
         this.name = name;
+        this.description = description;
+        this.rules = rules;
     }
 
     /**
      *
      * @param name
      * @param description
-     * @param icon
      * @param rules
-     * @param responsibleModerator
-     * @param moderators
+     * @param icon
      */
-    public Subforum( String name, String description, byte[] icon,
-                    List<String> rules, UserModel responsibleModerator,
-                    List<UserModel> moderators) {
+    public Subforum (String name, String description, String rules,
+            InputStream icon) { 
         this();
         this.name = name;
         this.description = description;
-        this.icon = icon;
         this.rules = rules;
-        this.responsibleModerator = responsibleModerator;
-        this.moderators = moderators;
+        this.icon = icon;
     }
+
 
     /**
      *
@@ -116,7 +121,7 @@ public class Subforum {
      *
      * @return
      */
-    public byte[] getIcon() {
+    public InputStream getIcon() {
         return icon;
     }
 
@@ -124,7 +129,7 @@ public class Subforum {
      *
      * @param icon
      */
-    public void setIcon(byte[] icon) {
+    public void setIcon(InputStream icon) {
         this.icon = icon;
     }
 
@@ -132,7 +137,7 @@ public class Subforum {
      *
      * @return
      */
-    public List<String> getRules() {
+    public String getRules() {
         return rules;
     }
 
@@ -140,7 +145,7 @@ public class Subforum {
      *
      * @param rules
      */
-    public void setRules(List<String> rules) {
+    public void setRules(String rules) {
         this.rules = rules;
     }
 
@@ -178,7 +183,8 @@ public class Subforum {
 
     @Override
     public String toString() {
-        return "Subforum{" + "id=" + id + ", name=" + name + ", description=" + description + ", icon=" + Arrays.toString(icon) + ", rules=" + rules + ", responsibleModerator=" + responsibleModerator + ", moderators=" + moderators + '}';
+        return "Subforum{" + "id=" + id + ", name=" + name + ", description=" + description + ", icon=" + icon + ", rules=" + rules + ", responsibleModerator=" + responsibleModerator + ", moderators=" + moderators + '}';
     }
+
 
 }
