@@ -96,8 +96,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UserModel user) {
         UserModel foundUser = getUsers().stream().filter(u->u.getUsername().equals(user.getUsername()))
-                .findFirst()
-                .orElse(null);
+                              .findFirst()
+                               .orElse(null);
         
         if (foundUser != null)
             users.remove(foundUser);
@@ -110,8 +110,8 @@ public class UserServiceImpl implements UserService {
     public UserModel getByString(String s) {
         UserModel foundUser;
         foundUser = getUsers().stream().filter(u->u.getUsername().equals(s))
-                                    .findFirst()
-                                    .orElse(null);
+                    .findFirst()
+                    .orElse(null);
 
         return (foundUser != null) ? foundUser : null;
     }
@@ -120,8 +120,9 @@ public class UserServiceImpl implements UserService {
     public UserModel getById(Integer id) {
         UserModel foundUser;
         foundUser = getUsers().stream().filter(u -> Objects.equals(u.getId(), id))
-                .findFirst()
-                .orElse(null);
+                    .findFirst()
+                    .orElse(null);
+
         return (foundUser != null) ? foundUser : null;
     }
     

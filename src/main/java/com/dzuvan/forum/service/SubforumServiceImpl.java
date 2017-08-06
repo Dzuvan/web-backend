@@ -93,8 +93,8 @@ public class SubforumServiceImpl implements SubforumService {
     @Override
     public void delete(Subforum subforum) {
         Subforum foundSubforum = getSubforums().stream().filter(s->s.getName().equals(subforum.getName()))
-                .findFirst()
-                .get();
+                                .findFirst()
+                                .get();
         if (foundSubforum != null) 
             subforums.remove(foundSubforum);
     }
@@ -119,8 +119,8 @@ public class SubforumServiceImpl implements SubforumService {
     @Override
     public Subforum edit(Subforum subforum, Integer id) {
         subforum = getSubforums().stream().filter(s->s.getId() == id)
-                .findFirst()
-                .orElse(null);
+                   .findFirst()
+                   .orElse(null);
         return (subforum != null) ? subforums.set(id, subforum) : null;
     }
     
@@ -135,11 +135,8 @@ public class SubforumServiceImpl implements SubforumService {
                 sf.add(subforum);
                 saveSubforumList(subforums);
                 return true;
-        }
-        else {
-
+        } else 
             return false;
-        }
     }
     
     @Override

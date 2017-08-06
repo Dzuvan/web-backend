@@ -17,6 +17,7 @@
 
 package com.dzuvan.forum.model;
 
+import java.util.Arrays;
 import java.util.List;
 /**
  *
@@ -177,7 +178,7 @@ public class Subforum {
 
     @Override
     public String toString() {
-        return "Subforum{" + "id=" + id + ", name=" + name + ", description=" + description + ", icon=" + icon + ", rules=" + rules + ", responsibleModerator=" + responsibleModerator + ", moderators=" + moderators + '}';
+        return "Subforum{" + "id=" + id + ", name=" + name + ", description=" + description + ", icon=" + Arrays.toString(icon) + ", rules=" + rules + ", responsibleModerator=" + responsibleModerator + ", moderators=" + moderators + '}';
     }
 
 }
