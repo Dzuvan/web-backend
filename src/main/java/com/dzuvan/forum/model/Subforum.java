@@ -17,19 +17,23 @@
 
 package com.dzuvan.forum.model;
 
-import java.io.InputStream;
+
+import java.io.Serializable;
 import java.util.List;
 /**
  *
  * @author dzuvan
  */
-public class Subforum {
+public class Subforum implements Serializable {
+
+    private static final long serialVersionUID = 3261045213287698581L;
 
     private Integer id;
     private static Integer nextId = 1;
+
     private String name;
     private String description;
-    private InputStream icon;
+    private transient IconFile icon;
     private String rules;
     private UserModel responsibleModerator;
     private List<UserModel> moderators;
@@ -60,7 +64,7 @@ public class Subforum {
      * @param icon
      */
     public Subforum (String name, String description, String rules,
-            InputStream icon) { 
+            IconFile icon) { 
         this();
         this.name = name;
         this.description = description;
@@ -121,7 +125,7 @@ public class Subforum {
      *
      * @return
      */
-    public InputStream getIcon() {
+    public IconFile getIcon() {
         return icon;
     }
 
@@ -129,7 +133,7 @@ public class Subforum {
      *
      * @param icon
      */
-    public void setIcon(InputStream icon) {
+    public void setIcon(IconFile icon) {
         this.icon = icon;
     }
 

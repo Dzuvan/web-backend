@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -69,7 +70,6 @@ public class SubforumServiceImpl implements SubforumService {
                     subforums = (ArrayList<Subforum>)ois.readObject();
                 }
             }
-
         } catch(IOException | ClassNotFoundException ex) {}
         return subforums;
     }
@@ -118,9 +118,9 @@ public class SubforumServiceImpl implements SubforumService {
     
     @Override
     public Subforum edit(Subforum subforum, Integer id) {
-        subforum = getSubforums().stream().filter(s->s.getId() == id)
-                   .findFirst()
-                   .orElse(null);
+        subforum = getSubforums().stream() .filter(s->s.getId() == id)
+                    .findFirst()
+                    .orElse(null);
         return (subforum != null) ? subforums.set(id, subforum) : null;
     }
     
@@ -129,16 +129,13 @@ public class SubforumServiceImpl implements SubforumService {
         ArrayList<Subforum> sf = getSubforums();
         Subforum foundSubforum;
         foundSubforum = sf.stream().filter(s->s.getName().equals(subforum.getName()))
-                                  .findFirst()
-                                  .orElse(null);
-        if (foundSubforum == null)  return false; 
-        else if (foundSubforum.getName().equals(subforum.getName())) {
-            return false;
-        } else {
+                                    .findAny()
+                                    .orElse(null);
+        if (foundSubforum == null) {
             sf.add(subforum);
             saveSubforumList(subforums);
             return true;
-        }
+        } else return false;
     }
     
     @Override
@@ -148,5 +145,6 @@ public class SubforumServiceImpl implements SubforumService {
     
     public final void init() {
         subforums.add(new Subforum("forum1", "description1", null, null)) ;
+        subforums.add(new Subforum("dva", "mlogo kul", "budite dobri", null)) ;
     }
 }

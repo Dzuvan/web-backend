@@ -16,6 +16,7 @@
  */
 package com.dzuvan.forum.controller;
 
+import com.dzuvan.forum.model.IconFile;
 import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.service.SubforumServiceImpl;
 import java.io.File;
@@ -24,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -110,7 +110,7 @@ public class SubforumController {
      *
      * @param name
      * @param description
-     * @param icon
+     * @param file
      * @param rules
      * @param fileData
      * @return
@@ -118,15 +118,16 @@ public class SubforumController {
     @POST
     @Path("/subforums")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addSubforum(@FormDataParam("name") String name,
                                 @FormDataParam("description") String description,
-                                @FormDataParam("icon") InputStream icon,
                                 @FormDataParam("rules") String rules,
+                                @FormDataParam("icon") InputStream file,
                                 @FormDataParam("icon") FormDataContentDisposition fileData) {
-
+        IconFile icon = new IconFile(file, fileData);
         Subforum subforum = new Subforum(name, description, rules, icon);
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        writeToFile(icon, location);
+        writeToFile(icon.getFile(), location);
         SubforumServiceImpl.getInstance().addOne(subforum);
         return  Response.status(Response.Status.CREATED)
                         .entity(subforum)
@@ -141,7 +142,7 @@ public class SubforumController {
      * @param name
      * @param description
      * @param rules
-     * @param icon
+     * @param file
      * @param fileData
      * @return
      */
@@ -152,9 +153,9 @@ public class SubforumController {
     public Response updateSubforum(@FormDataParam("name") String name,
                                 @FormDataParam("description") String description,
                                 @FormDataParam("rules") String rules,
-                                @FormDataParam("icon") InputStream icon,
+                                @FormDataParam("icon") InputStream file,
                                 @FormDataParam("icon") FormDataContentDisposition fileData) {
-          
+        IconFile icon = new IconFile(file, fileData); 
         Subforum subforum = new Subforum(name, description, rules, icon);
         if (subforum.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
@@ -216,9 +217,9 @@ public class SubforumController {
 		String uploadedFileLocation) {
         
 		try {
-			OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
-			int read = 0;
-			byte[] bytes = new byte[1024];
+			OutputStream out;
+			int read;
+			byte[] bytes = new byte[10240];
 
 			out = new FileOutputStream(new File(uploadedFileLocation));
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
@@ -226,7 +227,6 @@ public class SubforumController {
 			}
 			out.flush();
 			out.close();
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
 	}
 }
