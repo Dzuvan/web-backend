@@ -33,7 +33,10 @@ public class Subforum implements Serializable {
 
     private String name;
     private String description;
-    private transient IconFile icon;
+    // String ikonica
+    // Putanja do fajla koji je sačuvan
+
+    private String icon;
     private String rules;
     private UserModel responsibleModerator;
     private List<UserModel> moderators;
@@ -64,7 +67,7 @@ public class Subforum implements Serializable {
      * @param icon
      */
     public Subforum (String name, String description, String rules,
-            IconFile icon) { 
+            String icon) { 
         this();
         this.name = name;
         this.description = description;
@@ -125,7 +128,7 @@ public class Subforum implements Serializable {
      *
      * @return
      */
-    public IconFile getIcon() {
+    public String getIcon() {
         return icon;
     }
 
@@ -133,7 +136,7 @@ public class Subforum implements Serializable {
      *
      * @param icon
      */
-    public void setIcon(IconFile icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

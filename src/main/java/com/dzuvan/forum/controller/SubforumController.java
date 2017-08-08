@@ -16,7 +16,6 @@
  */
 package com.dzuvan.forum.controller;
 
-import com.dzuvan.forum.model.IconFile;
 import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.service.SubforumServiceImpl;
 import java.io.File;
@@ -124,10 +123,9 @@ public class SubforumController {
                                 @FormDataParam("rules") String rules,
                                 @FormDataParam("icon") InputStream file,
                                 @FormDataParam("icon") FormDataContentDisposition fileData) {
-        IconFile icon = new IconFile(file, fileData);
-        Subforum subforum = new Subforum(name, description, rules, icon);
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        writeToFile(icon.getFile(), location);
+        Subforum subforum = new Subforum(name, description, rules, location);
+        writeToFile(file, location);
         SubforumServiceImpl.getInstance().addOne(subforum);
         return  Response.status(Response.Status.CREATED)
                         .entity(subforum)
@@ -155,8 +153,8 @@ public class SubforumController {
                                 @FormDataParam("rules") String rules,
                                 @FormDataParam("icon") InputStream file,
                                 @FormDataParam("icon") FormDataContentDisposition fileData) {
-        IconFile icon = new IconFile(file, fileData); 
-        Subforum subforum = new Subforum(name, description, rules, icon);
+        String location = System.getProperty("user.dir") + fileData.getFileName();
+        Subforum subforum = new Subforum(name, description, rules, location);
         if (subforum.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
                     .header("Access-Control-Allow-Origin", "*")

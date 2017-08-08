@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
  * @author dzuvan
  */
 public class UserServiceImpl implements UserService {
-    private static final String FILENAME = "users.txt";
+    private static final String FILENAME = "users.dat";
     private static final String DIRECTORY = System.getProperty("user.dir");
     
     private static UserServiceImpl instance = null;
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     public UserModel getById(Integer id) {
         UserModel foundUser;
         foundUser = getUsers().stream().filter(u -> Objects.equals(u.getId(), id))
-                    .findFirst()
+                    .findAny()
                     .orElse(null);
 
         return (foundUser != null) ? foundUser : null;
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel edit(UserModel user, Integer id) {
         user = getUsers().stream().filter(u->Objects.equals(u.getId(), id))
-                .findFirst()
+                .findAny()
                 .orElse(null);
         
         return (user != null) ? users.set(id, user) : null;
@@ -139,11 +139,11 @@ public class UserServiceImpl implements UserService {
     public boolean addOne(UserModel user) {
         ArrayList<UserModel> gotUsers = getUsers();
         UserModel foundUser;
-        foundUser = gotUsers.stream().filter(u->Objects.equals(u.getId(), user.getId()))
-                .findFirst()
+        foundUser = gotUsers.stream().filter(u->u.getUsername().equals(user.getUsername()))
+                .findAny()
                 .orElse(null);
 
-            if (!foundUser.getUsername().equals(user.getUsername())) {
+            if (foundUser == null) {
                 users.add(user);
                 saveUserList(gotUsers);
                 return true;

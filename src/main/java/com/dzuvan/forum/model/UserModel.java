@@ -17,7 +17,6 @@
 
 package com.dzuvan.forum.model;
 
-import com.dzuvan.forum.service.UserServiceImpl;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -35,7 +34,7 @@ public class UserModel  implements Serializable{
 
 
     private Integer id;
-    private static Integer nextId = 6;
+    private static Integer nextId = 1;
 
     private String username;
     private String password;
