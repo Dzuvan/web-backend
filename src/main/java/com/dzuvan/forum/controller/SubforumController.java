@@ -123,7 +123,7 @@ public class SubforumController {
                                 @FormDataParam("rules") String rules,
                                 @FormDataParam("icon") InputStream file,
                                 @FormDataParam("icon") FormDataContentDisposition fileData) {
-        String location = System.getProperty("user.dir") + fileData.getFileName();
+        String location = "/home/dzuvan/"+ fileData.getFileName();
         Subforum subforum = new Subforum(name, description, rules, location);
         writeToFile(file, location);
         SubforumServiceImpl.getInstance().addOne(subforum);
@@ -210,7 +210,7 @@ public class SubforumController {
     public String getSupportedOperations () {
     return "<operations>GET, PUT, POST, DELETE</operations>";
     }
-
+    
     private void writeToFile(InputStream uploadedInputStream,
 		String uploadedFileLocation) {
         
@@ -226,5 +226,7 @@ public class SubforumController {
 			out.flush();
 			out.close();
 		} catch (IOException e) {}
+        
 	}
+ 
 }
