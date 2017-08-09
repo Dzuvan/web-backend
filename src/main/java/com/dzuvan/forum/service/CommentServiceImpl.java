@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean addOne(Comment o) {
+    public boolean addOne(Comment comment) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

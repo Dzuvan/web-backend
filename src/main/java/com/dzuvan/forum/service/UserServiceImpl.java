@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
                                .orElse(null);
         
         if (foundUser != null)
-            users.remove(foundUser);
+            getUsers().remove(foundUser);
         else {
             Response.noContent().build();
         }
@@ -112,7 +112,6 @@ public class UserServiceImpl implements UserService {
         foundUser = getUsers().stream().filter(u->u.getUsername().equals(s))
                     .findFirst()
                     .orElse(null);
-
         return (foundUser != null) ? foundUser : null;
     }
     
@@ -122,30 +121,26 @@ public class UserServiceImpl implements UserService {
         foundUser = getUsers().stream().filter(u -> Objects.equals(u.getId(), id))
                     .findAny()
                     .orElse(null);
-
         return (foundUser != null) ? foundUser : null;
     }
     
     @Override
     public UserModel edit(UserModel user, Integer id) {
-        user = getUsers().stream().filter(u->Objects.equals(u.getId(), id))
+        UserModel foundUser = getUsers().stream().filter(u->Objects.equals(u.getId(), id))
                 .findAny()
                 .orElse(null);
-        
-        return (user != null) ? users.set(id, user) : null;
+        return (foundUser != null) ? users.set(id, user) : null;
     }
     
     @Override
     public boolean addOne(UserModel user) {
-        ArrayList<UserModel> gotUsers = getUsers();
-        UserModel foundUser;
-        foundUser = gotUsers.stream().filter(u->u.getUsername().equals(user.getUsername()))
+        UserModel foundUser = getUsers().stream().filter(u->u.getUsername().equals(user.getUsername()))
                 .findAny()
                 .orElse(null);
 
             if (foundUser == null) {
                 users.add(user);
-                saveUserList(gotUsers);
+                saveUserList(getUsers());
                 return true;
             } else 
                 return false;
@@ -158,17 +153,17 @@ public class UserServiceImpl implements UserService {
     }
     
     public final void init(){
-        users.add(new UserModel( "admin", "admin", "marko", "markovic",
+        getUsers().add(new UserModel( "admin", "admin", "marko", "markovic",
                 Role.ADMINISTRATOR, "555-333", "marko@markovic.com", LocalDate.of(2017, 8, 10),
                 null, null, null));
         
         
-        users.add(new UserModel( "mode", "mode", "milan", "milankovic",
+        getUsers().add(new UserModel( "mode", "mode", "milan", "milankovic",
                 Role.MODERATOR, "666-333", "milan@gmail.com", LocalDate.of(2017, 8, 18),
                 null, null, null));
         
         
-        users.add(new UserModel("first", "users", "jovan", "jovannovci",
+        getUsers().add(new UserModel("first", "users", "jovan", "jovannovci",
                 Role.USER, "444-333", "jovan@gmail.com", LocalDate.of(2017, 9, 18),
                 null, null, null));
         

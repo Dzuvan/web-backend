@@ -17,14 +17,21 @@
 
 package com.dzuvan.forum.model;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
  *
  * @author dzuvan
  */
-public class Theme {
+public class Theme implements Serializable {
+
+    private static final long serialVersionUID = -9143705498330171960L;
+
+
+    private Integer id;
+    private static Integer nextId = 1;
    
     private Subforum subforum;
     private String title;
@@ -32,11 +39,13 @@ public class Theme {
     private UserModel author;
     private List<Comment> comments;
     private String content;
-    private Date dateOfCreating;
+    private LocalDate dateOfCreating;
     private Integer likes;
     private Integer dislikes;
 
     public Theme() {
+        id = nextId;
+        nextId++;
     }
 
     /**
@@ -53,7 +62,8 @@ public class Theme {
      */
     public Theme(Subforum subforum, String title, ThemeType type, 
                 UserModel author, List<Comment> comments, String content, 
-                Date dateOfCreating, Integer likes, Integer dislikes) {
+                LocalDate dateOfCreating, Integer likes, Integer dislikes) {
+        this();
         this.subforum = subforum;
         this.title = title;
         this.type = type;
@@ -64,6 +74,23 @@ public class Theme {
         this.likes = likes;
         this.dislikes = dislikes;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static Integer getNextId() {
+        return nextId;
+    }
+
+    public static void setNextId(Integer nextId) {
+        Theme.nextId = nextId;
+    }
+    
 
     /**
      *
@@ -165,7 +192,7 @@ public class Theme {
      *
      * @return
      */
-    public Date getDateOfCreating() {
+    public LocalDate getDateOfCreating() {
         return dateOfCreating;
     }
 
@@ -173,7 +200,7 @@ public class Theme {
      *
      * @param dateOfCreating
      */
-    public void setDateOfCreating(Date dateOfCreating) {
+    public void set(LocalDate dateOfCreating) {
         this.dateOfCreating = dateOfCreating;
     }
 
@@ -211,8 +238,9 @@ public class Theme {
 
     @Override
     public String toString() {
-        return "Theme{" + "subforum=" + subforum + ", title=" + title + ", type=" + type + ", author=" + author + ", comments=" + comments + ", content=" + content + ", dateOfCreating=" + dateOfCreating + ", likes=" + likes + ", dislikes=" + dislikes + '}';
+        return "Theme{" + "id=" + id + ", subforum=" + subforum + ", title=" + title + ", type=" + type + ", author=" + author + ", comments=" + comments + ", content=" + content + ", dateOfCreating=" + dateOfCreating + ", likes=" + likes + ", dislikes=" + dislikes + '}';
     }
+
 
     
 

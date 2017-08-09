@@ -17,16 +17,19 @@
 
 package com.dzuvan.forum.model;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  *
  * @author dzuvan
  */
-public class Comment {
+public class Comment implements Serializable {
+
+    private static final long serialVersionUID = -3812645247109314175L;
 
     private UserModel author;
-    private Date commentDate;
+    private LocalDate commentDate;
     private Comment parentComment;
     private String commentText;
     private Integer likes;
@@ -49,7 +52,7 @@ public class Comment {
      * @param dislikes
      * @param isEdited
      */
-    public Comment(UserModel author, Date commentDate, Comment parentComment,
+    public Comment(UserModel author, LocalDate commentDate, Comment parentComment,
             String commentText, Integer likes, Integer dislikes,
             boolean isEdited) {
         this.author = author;
@@ -81,7 +84,7 @@ public class Comment {
      *
      * @return
      */
-    public Date getCommentDate() {
+    public LocalDate getCommentDate() {
         return commentDate;
     }
 
@@ -89,7 +92,7 @@ public class Comment {
      *
      * @param commentDate
      */
-    public void setCommentDate(Date commentDate) {
+    public void setCommentDate(LocalDate commentDate) {
         this.commentDate = commentDate;
     }
 

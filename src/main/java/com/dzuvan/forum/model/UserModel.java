@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author dzuvan
  */
-@XmlRootElement(name = "user")
 public class UserModel  implements Serializable{
 
     private static final long serialVersionUID = -4156591132476352712L;
