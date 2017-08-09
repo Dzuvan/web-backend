@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
      * @return instance
      */
     public static UserServiceImpl getInstance() {
-        if(instance == null){
+        if (instance == null){
             instance = new UserServiceImpl();
         }
         return instance;
@@ -67,12 +67,12 @@ public class UserServiceImpl implements UserService {
             File file = new File(DIRECTORY, FILENAME);
             if (!file.exists()) {
                 saveUserList(users);
-            } else {
-                FileInputStream fis = new FileInputStream(file);
-                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    users = (ArrayList<UserModel>) ois.readObject();
+            }   else {
+                    FileInputStream fis = new FileInputStream(file);
+                    try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                        users = (ArrayList<UserModel>) ois.readObject();
+                    }
                 }
-            }
         } catch (IOException | ClassNotFoundException ex) {}
         
         return users;
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public void delete(UserModel user) {
         UserModel foundUser = getUsers().stream().filter(u->u.getUsername().equals(user.getUsername()))
                               .findFirst()
-                               .orElse(null);
+                              .orElse(null);
         
         if (foundUser != null)
             getUsers().remove(foundUser);
@@ -142,14 +142,13 @@ public class UserServiceImpl implements UserService {
                 users.add(user);
                 saveUserList(getUsers());
                 return true;
-            } else 
-                return false;
+            }   else 
+                    return false;
     }
     
     @Override
     public ArrayList<UserModel> getAll() {
         return getUsers();
-        
     }
     
     public final void init(){

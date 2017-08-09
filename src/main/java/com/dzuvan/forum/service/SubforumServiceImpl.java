@@ -48,7 +48,7 @@ public class SubforumServiceImpl implements SubforumService {
      * @return Singleton
      */
     public static SubforumServiceImpl getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new SubforumServiceImpl();
         }
         return instance;
@@ -64,13 +64,14 @@ public class SubforumServiceImpl implements SubforumService {
             
             if (!file.exists()) {
                 saveSubforumList(subforums);
-            } else {
-                FileInputStream fis = new FileInputStream(file);
-                try ( ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    subforums = (ArrayList<Subforum>)ois.readObject();
+            }   else {
+                    FileInputStream fis = new FileInputStream(file);
+                    try ( ObjectInputStream ois = new ObjectInputStream(fis)) {
+                        subforums = (ArrayList<Subforum>)ois.readObject();
+                    }
                 }
-            }
         } catch(IOException | ClassNotFoundException ex) {}
+
         return subforums;
     }
 
@@ -135,7 +136,7 @@ public class SubforumServiceImpl implements SubforumService {
             sf.add(subforum);
             saveSubforumList(subforums);
             return true;
-        } else return false;
+        }   else return false;
     }
     
     @Override

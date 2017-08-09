@@ -16,7 +16,10 @@
  */
 package com.dzuvan.forum.service;
 
+import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.model.Theme;
+import com.dzuvan.forum.model.ThemeType;
+import com.dzuvan.forum.model.UserModel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.ws.rs.core.Response;
 
@@ -63,12 +67,12 @@ public class ThemeServiceImpl implements ThemeService {
             File file = new File(DIRECTORY, FILENAME);
             if (!file.exists()) {
                 saveUserList(themes);
-            } else {
-                FileInputStream fis = new FileInputStream(file);
-                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    themes = (ArrayList<Theme>) ois.readObject();
+            }   else {
+                    FileInputStream fis = new FileInputStream(file);
+                    try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                        themes = (ArrayList<Theme>) ois.readObject();
+                    }
                 }
-            }
         } catch (IOException | ClassNotFoundException ex) {}
         
         return themes;
@@ -96,9 +100,9 @@ public class ThemeServiceImpl implements ThemeService {
                 .orElse(null);
         if (foundTheme != null) {
             getThemes().remove(foundTheme);
-        } else {
-            Response.noContent().build();
-        }
+        }   else {
+                Response.noContent().build();
+            }
     }
 
     @Override
@@ -135,8 +139,8 @@ public class ThemeServiceImpl implements ThemeService {
                 getThemes().add(theme);
                 saveUserList(getThemes());
                 return true;
-            } else 
-                return false;
+            }   else 
+                 return false;
 
     }
 
@@ -145,12 +149,20 @@ public class ThemeServiceImpl implements ThemeService {
         return getThemes();
     }
 
-    // TODO: Popuniti.
+
+    /**
+     * Test data for themes.
+     *
+     */
 
     public final void init() {
-        getThemes().add(new Theme());
-        getThemes().add(new Theme());
-        getThemes().add(new Theme());
+        Subforum first = SubforumServiceImpl.getInstance().getById(1);
+        UserModel one = UserServiceImpl.getInstance().getById(1);
+        one.getFollowedSubforums().add(first);
+        // TODO : comments
+        getThemes().add(new Theme(first, "First theme", ThemeType.TEXT, one, null, "one two three", LocalDate.of(8,8, 2017),1, 0));
+        getThemes().add(new Theme(first, "Second theme", ThemeType.TEXT, one, null, "tototot", LocalDate.of(8,8, 2017),5, 5));
+        getThemes().add(new Theme(first, "Third theme", ThemeType.TEXT, one, null, "ajajajaj", LocalDate.of(8,8, 2017),0, 5));
 
     }
     
