@@ -108,7 +108,6 @@ public class ThemeController {
             }
     }
 
-    
     /**
      *Vrlo moguće da je suvišno.
      * @return dozvoljene operacije za CRUD, jer CORS pravi problem.

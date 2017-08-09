@@ -28,6 +28,9 @@ public class Comment implements Serializable {
 
     private static final long serialVersionUID = -3812645247109314175L;
 
+    private Integer id;
+    private static Integer nextId = 1;
+
     private UserModel author;
     private LocalDate commentDate;
     private Comment parentComment;
@@ -40,6 +43,8 @@ public class Comment implements Serializable {
      *
      */
     public Comment() {
+        id = nextId;
+        nextId++;
     }
 
     /**
@@ -55,6 +60,7 @@ public class Comment implements Serializable {
     public Comment(UserModel author, LocalDate commentDate, Comment parentComment,
             String commentText, Integer likes, Integer dislikes,
             boolean isEdited) {
+        this();
         this.author = author;
         this.commentDate = commentDate;
         this.parentComment = parentComment;
@@ -63,6 +69,32 @@ public class Comment implements Serializable {
         this.dislikes = dislikes;
         this.isEdited = isEdited;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static Integer getNextId() {
+        return nextId;
+    }
+
+    public static void setNextId(Integer nextId) {
+        Comment.nextId = nextId;
+    }
+
+    public boolean isIsEdited() {
+        return isEdited;
+    }
+
+    public void setIsEdited(boolean isEdited) {
+        this.isEdited = isEdited;
+    }
+
+
 
     /**
      *
@@ -178,7 +210,7 @@ public class Comment implements Serializable {
 
     @Override
     public String toString() {
-        return "Comment{" + "author=" + author + ", commentDate=" + commentDate + ", parentComment=" + parentComment + ", commentText=" + commentText + ", likes=" + likes + ", dislikes=" + dislikes + ", isEdited=" + isEdited + '}';
+        return "Comment{" + "id=" + id + ", author=" + author + ", commentDate=" + commentDate + ", parentComment=" + parentComment + ", commentText=" + commentText + ", likes=" + likes + ", dislikes=" + dislikes + ", isEdited=" + isEdited + '}';
     }
 
 }

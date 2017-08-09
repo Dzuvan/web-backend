@@ -14,26 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.dzuvan.forum.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
-
 
 /**
  *
  * @author dzuvan
  */
-public class UserModel  implements Serializable{
+public class UserModel implements Serializable {
 
     private static final long serialVersionUID = -4156591132476352712L;
 
-
-    private Integer id;
     private static Integer nextId = 1;
+    private Integer id;
 
     private String username;
     private String password;
@@ -72,9 +68,9 @@ public class UserModel  implements Serializable{
      * @param savedComments
      */
     public UserModel(String username, String password, String firstName,
-                       String lastName, Role role, String phone, String email,
-                       LocalDate registrationDate, List<Theme> followedThemes,
-                       List<Subforum> followedSubforums, List<Comment> savedComments) {
+            String lastName, Role role, String phone, String email,
+            LocalDate registrationDate, List<Theme> followedThemes,
+            List<Subforum> followedSubforums, List<Comment> savedComments) {
         this();
         this.username = username;
         this.password = password;
@@ -88,7 +84,6 @@ public class UserModel  implements Serializable{
         this.followedSubforums = followedSubforums;
         this.savedComments = savedComments;
     }
-
 
     /**
      *
@@ -182,7 +177,6 @@ public class UserModel  implements Serializable{
      *
      * @param password
      */
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -287,7 +281,5 @@ public class UserModel  implements Serializable{
     public String toString() {
         return "UserDetails{" + "id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", phone=" + phone + ", email=" + email + ", registrationDate=" + registrationDate + ", followedThemes=" + followedThemes + ", followedSubforums=" + followedSubforums + ", savedComments=" + savedComments + '}';
     }
-
-
 
 }

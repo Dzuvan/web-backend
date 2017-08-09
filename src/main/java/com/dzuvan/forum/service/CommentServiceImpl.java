@@ -26,13 +26,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-
 public class CommentServiceImpl implements CommentService {
 
     private static final String FILENAME = "comments.dat";
     private static final String DIRECTORY = System.getProperty("user.dir");
 
     private static CommentServiceImpl instance = null;
+    public static CommentServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new CommentServiceImpl();
+        }
+        return instance;
+    }
     private ArrayList<Comment> comments;
 
     private CommentServiceImpl() {
@@ -40,72 +45,98 @@ public class CommentServiceImpl implements CommentService {
         init();
     }
 
-    public static CommentServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new CommentServiceImpl();
-        }
-        return instance;
-    }
 
     public ArrayList<Comment> getComments() {
         try {
             File file = new File(DIRECTORY, FILENAME);
-            
-            if (!file.exists()){
+
+            if (!file.exists()) {
                 saveComments(comments);
             } else {
                 FileInputStream fis = new FileInputStream(file);
                 try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    comments = (ArrayList<Comment>)ois.readObject();
+                    comments = (ArrayList<Comment>) ois.readObject();
                 }
             }
-        } catch (IOException | ClassNotFoundException ex) {}
+        } catch (IOException | ClassNotFoundException ex) {
+        }
         return comments;
     }
 
-    public  void saveComments(ArrayList<Comment> comments) {
+    public void saveComments(ArrayList<Comment> comments) {
         try {
             File file = new File(DIRECTORY, FILENAME);
             FileOutputStream fos = new FileOutputStream(file);
             try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                 oos.writeObject(comments);
             }
-        } catch (FileNotFoundException ex){
-        } catch(IOException ex) {}
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+        }
     }
 
     @Override
     public ArrayList<Comment> getAll() {
-        return getComments();     
+        return getComments();
     }
 
     @Override
     public boolean addOne(Comment comment) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(comment.getId()))
+                .findAny()
+                .orElse(null);
+        if (foundComment == null) {
+            getComments().add(comment);
+            saveComments(getComments());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public Comment edit(Comment o, Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Comment edit(Comment comment, Integer id) {
+        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(comment.getId()))
+                .findAny()
+                .orElse(null);
+        if (foundComment != null) {
+            getComments().set(id, comment);
+            saveComments(getComments());
+            return comment;
+
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Comment getById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(id))
+                .findAny()
+                .orElse(null);
+        return (foundComment != null) ? foundComment : null;
     }
 
     @Override
     public Comment getByString(String s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Comment foundComment = getComments().stream().filter(c -> c.getCommentText().equals(s))
+                .findAny()
+                .orElse(null);
+        return (foundComment != null) ? foundComment : null;
     }
 
     @Override
     public void delete(Comment o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(o.getId()))
+                .findFirst()
+                .orElse(null);
+        if (foundComment != null) {
+            getComments().remove(foundComment);
+        }
     }
 
     public final void init() {
 
     }
-    
+
 }
