@@ -19,6 +19,7 @@ package com.dzuvan.forum.controller;
 import com.dzuvan.forum.model.Comment;
 import com.dzuvan.forum.model.UserModel;
 import com.dzuvan.forum.service.CommentServiceImpl;
+import com.dzuvan.forum.service.UserServiceImpl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
@@ -109,18 +110,30 @@ public class CommentController {
         return "<operations>GET, PUT, POST, DELETE</operations>";
     }
 
+    /**
+     *
+     * @param author
+     * @param parent
+     * @param text
+     * @param likes
+     * @param dislikes
+     * @param isEdited
+     * @return
+     */
     @POST
     @Path("/comments")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addComment(@FormParam("author") UserModel author,
-            @FormParam("parent") Comment parent,
+    public Response addComment(@FormParam("author") String author,
+            @FormParam("parent") String parent,
             @FormParam("text") String text,
             @FormParam("likes") Integer likes,
             @FormParam("dislikes") Integer dislikes,
             @FormParam("isEdited") boolean isEdited) {
-        Comment comment = new Comment(author, LocalDate.now(), parent, text, likes,
-                dislikes, isEdited);
+        UserModel authorModel = UserServiceImpl.getInstance().getByString(author);
+        Comment parentModel = CommentServiceImpl.getInstance().getByString(parent);
+        Comment comment = new Comment(authorModel, LocalDate.now(), parentModel,
+                text, likes, dislikes, isEdited);
         if (comment.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity(comment)
@@ -143,15 +156,17 @@ public class CommentController {
     @Path("/comments")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editComment(@FormParam("author") UserModel author,
-            @FormParam("parent") Comment parent,
+    public Response editComment(@FormParam("author") String author,
+            @FormParam("parent") String parent,
             @FormParam("text") String text,
             @FormParam("likes") Integer likes,
             @FormParam("dislikes") Integer dislikes,
             @FormParam("isEdited") boolean isEdited) {
 
-        Comment comment = new Comment(author, LocalDate.now(), parent, text, likes,
-                dislikes, isEdited);
+        UserModel authorModel = UserServiceImpl.getInstance().getByString(author);
+        Comment parentModel = CommentServiceImpl.getInstance().getByString(parent);
+        Comment comment = new Comment(authorModel, LocalDate.now(), parentModel,
+                text, likes, dislikes, isEdited);
 
         if (comment.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)

@@ -120,7 +120,7 @@ public class UserController {
                             @FormParam ("phone") String phone,
                             @FormParam ("email") String email) {
         UserModel user = new UserModel(username, password, firstName, lastName,
-               Role.USER ,phone, email, LocalDate.now(), null, null, null);
+               Role.USER ,phone, email, LocalDate.now());
         UserServiceImpl.getInstance().addOne(user);
 
         return Response.status(Response.Status.CREATED)
@@ -154,7 +154,7 @@ public class UserController {
                                 @FormParam ("email") String email,
                                 @FormParam ("role") Role role) {
         UserModel user = new UserModel(username, password, firstName, lastName,
-              role ,phone, email, LocalDate.now(), null, null, null);
+              role ,phone, email, LocalDate.now());
         
         if (user.getId() != -1) {
             UserServiceImpl.getInstance().edit(user, user.getId());

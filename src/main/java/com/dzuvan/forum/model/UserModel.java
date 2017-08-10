@@ -18,7 +18,7 @@ package com.dzuvan.forum.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -41,9 +41,9 @@ public class UserModel implements Serializable {
     private String email;
     private LocalDate registrationDate;
     //TODO: Ovo bi možda moglo u neku drugu klasu kako bi ova bila isključivo za korisnike
-    private List<Theme> followedThemes;
-    private List<Subforum> followedSubforums;
-    private List<Comment> savedComments;
+    private ArrayList<Theme> followedThemes = new ArrayList<>();
+    private ArrayList<Subforum> followedSubforums = new ArrayList<>();
+    private ArrayList<Comment> savedComments = new ArrayList<>();
 
     /**
      *
@@ -52,6 +52,7 @@ public class UserModel implements Serializable {
         id = nextId;
         nextId++;
     }
+
 
     /**
      *
@@ -63,14 +64,10 @@ public class UserModel implements Serializable {
      * @param phone
      * @param email
      * @param registrationDate
-     * @param followedThemes
-     * @param followedSubforums
-     * @param savedComments
      */
     public UserModel(String username, String password, String firstName,
             String lastName, Role role, String phone, String email,
-            LocalDate registrationDate, List<Theme> followedThemes,
-            List<Subforum> followedSubforums, List<Comment> savedComments) {
+            LocalDate registrationDate) {
         this();
         this.username = username;
         this.password = password;
@@ -80,9 +77,9 @@ public class UserModel implements Serializable {
         this.phone = phone;
         this.email = email;
         this.registrationDate = registrationDate;
-        this.followedThemes = followedThemes;
-        this.followedSubforums = followedSubforums;
-        this.savedComments = savedComments;
+        this.followedThemes = new ArrayList<>();
+        this.followedSubforums = new ArrayList<>();
+        this.savedComments = new ArrayList<>();
     }
 
     /**
@@ -233,7 +230,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public List<Theme> getFollowedThemes() {
+    public ArrayList<Theme> getFollowedThemes() {
         return followedThemes;
     }
 
@@ -241,7 +238,7 @@ public class UserModel implements Serializable {
      *
      * @param followedThemes
      */
-    public void setFollowedThemes(List<Theme> followedThemes) {
+    public void setFollowedThemes(ArrayList<Theme> followedThemes) {
         this.followedThemes = followedThemes;
     }
 
@@ -249,7 +246,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public List<Subforum> getFollowedSubforums() {
+    public ArrayList<Subforum> getFollowedSubforums() {
         return followedSubforums;
     }
 
@@ -257,7 +254,7 @@ public class UserModel implements Serializable {
      *
      * @param followedSubforums
      */
-    public void setFollowedSubforums(List<Subforum> followedSubforums) {
+    public void setFollowedSubforums(ArrayList<Subforum> followedSubforums) {
         this.followedSubforums = followedSubforums;
     }
 
@@ -265,7 +262,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public List<Comment> getSavedComments() {
+    public ArrayList<Comment> getSavedComments() {
         return savedComments;
     }
 
@@ -273,7 +270,7 @@ public class UserModel implements Serializable {
      *
      * @param savedComments
      */
-    public void setSavedComments(List<Comment> savedComments) {
+    public void setSavedComments(ArrayList<Comment> savedComments) {
         this.savedComments = savedComments;
     }
 

@@ -153,18 +153,14 @@ public class UserServiceImpl implements UserService {
     
     public final void init(){
         getUsers().add(new UserModel( "admin", "admin", "marko", "markovic",
-                Role.ADMINISTRATOR, "555-333", "marko@markovic.com", LocalDate.of(2017, 8, 10),
-                null, null, null));
+                Role.ADMINISTRATOR, "555-333", "marko@markovic.com", LocalDate.of(2017, 8, 10)));
         
         
         getUsers().add(new UserModel( "mode", "mode", "milan", "milankovic",
-                Role.MODERATOR, "666-333", "milan@gmail.com", LocalDate.of(2017, 8, 18),
-                null, null, null));
+                Role.MODERATOR, "666-333", "milan@gmail.com", LocalDate.of(2017, 8, 18)));
         
         
         getUsers().add(new UserModel("first", "users", "jovan", "jovannovci",
-                Role.USER, "444-333", "jovan@gmail.com", LocalDate.of(2017, 9, 18),
-                null, null, null));
-        
+                Role.USER, "444-333", "jovan@gmail.com", LocalDate.of(2017, 9, 18)));
     }
 }

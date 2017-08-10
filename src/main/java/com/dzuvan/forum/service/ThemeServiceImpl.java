@@ -29,6 +29,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
 
 /**
@@ -161,11 +162,10 @@ public class ThemeServiceImpl implements ThemeService {
     public final void init() {
         Subforum first = SubforumServiceImpl.getInstance().getById(1);
         UserModel one = UserServiceImpl.getInstance().getById(1);
-        one.getFollowedSubforums().add(first);
-        // TODO : comments
-        getThemes().add(new Theme(first, "First theme", ThemeType.TEXT, one, null, "one two three", LocalDate.of(8, 8, 2017), 1, 0));
-        getThemes().add(new Theme(first, "Second theme", ThemeType.TEXT, one, null, "tototot", LocalDate.of(8, 8, 2017), 5, 5));
-        getThemes().add(new Theme(first, "Third theme", ThemeType.TEXT, one, null, "ajajajaj", LocalDate.of(8, 8, 2017), 0, 5));
+
+        getThemes().add(new Theme(first, "First theme", ThemeType.TEXT, one, null, "one two three", LocalDate.of(2017, 8, 8), 1, 0));
+        getThemes().add(new Theme(first, "Second theme", ThemeType.TEXT, one, null, "tototot", LocalDate.of(2017,8, 8), 5, 5));
+        getThemes().add(new Theme(first, "Third theme", ThemeType.TEXT, one, null, "ajajajaj", LocalDate.of(2017,8, 8), 0, 5));
 
     }
 
