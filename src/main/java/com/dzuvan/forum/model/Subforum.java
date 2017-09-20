@@ -19,6 +19,7 @@ package com.dzuvan.forum.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 /**
  *
@@ -29,17 +30,14 @@ public class Subforum implements Serializable {
     private static final long serialVersionUID = 3261045213287698581L;
 
     private Integer id;
-    private static Integer nextId = 1;
+    private static Integer nextId = 6;
 
     private String name;
     private String description;
-    // String ikonica
-    // Putanja do fajla koji je sačuvan
-
     private String icon;
     private String rules;
     private UserModel responsibleModerator;
-    private List<UserModel> moderators;
+    private List<Integer> moderators;
 
     public Subforum() {
         id = nextId;
@@ -51,28 +49,18 @@ public class Subforum implements Serializable {
      * @param name
      * @param description
      * @param rules
-     */
-    public Subforum (String name, String description, String rules) { 
-        this();
-        this.name = name;
-        this.description = description;
-        this.rules = rules;
-    }
-
-    /**
-     *
-     * @param name
-     * @param description
-     * @param rules
      * @param icon
+     * @param responsibleModerator
      */
     public Subforum (String name, String description, String rules,
-            String icon) { 
+            String icon, UserModel responsibleModerator) { 
         this();
         this.name = name;
         this.description = description;
         this.rules = rules;
         this.icon = icon;
+        this.moderators = new ArrayList<>();
+        this.responsibleModerator = responsibleModerator;
     }
 
 
@@ -176,7 +164,7 @@ public class Subforum implements Serializable {
      *
      * @return
      */
-    public List<UserModel> getModerators() {
+    public List<Integer> getModerators() {
         return moderators;
     }
 
@@ -184,7 +172,7 @@ public class Subforum implements Serializable {
      *
      * @param moderators
      */
-    public void setModerators(List<UserModel> moderators) {
+    public void setModerators(List<Integer> moderators) {
         this.moderators = moderators;
     }
 

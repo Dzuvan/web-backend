@@ -16,7 +16,9 @@
  */
 package com.dzuvan.forum.service;
 
+import com.dzuvan.forum.model.Role;
 import com.dzuvan.forum.model.Subforum;
+import com.dzuvan.forum.model.UserModel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -95,7 +97,7 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public void delete(Subforum subforum) {
-        Subforum foundSubforum = getSubforums().stream().filter(s -> s.getName().equals(subforum.getName()))
+        Subforum foundSubforum = subforums.stream().filter(s -> s.getName().equals(subforum.getName()))
                 .findFirst()
                 .orElse(null);
         if (foundSubforum != null) {
@@ -105,7 +107,7 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public Subforum getByString(String name) {
-        Subforum foundSubforum = getSubforums().stream().filter(s -> s.getName().equals(name))
+        Subforum foundSubforum = subforums.stream().filter(s -> s.getName().equals(name))
                 .findFirst()
                 .orElse(null);
         return (foundSubforum != null) ? foundSubforum : null;
@@ -114,7 +116,7 @@ public class SubforumServiceImpl implements SubforumService {
     @Override
     public Subforum getById(Integer id) {
         Subforum foundSubforum;
-        foundSubforum = getSubforums().stream().filter(s -> s.getId() == id)
+        foundSubforum = subforums.stream().filter(s -> s.getId() == id)
                 .findFirst()
                 .orElse(null);
         return (foundSubforum != null) ? foundSubforum : null;
@@ -122,7 +124,7 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public Subforum edit(Subforum subforum, Integer id) {
-        subforum = getSubforums().stream().filter(s -> s.getId() == id)
+        subforum = subforums.stream().filter(s -> s.getId() == id)
                 .findFirst()
                 .orElse(null);
         if (subforum != null) {
@@ -136,12 +138,12 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public boolean addOne(Subforum subforum) {
-        Subforum foundSubforum = getSubforums().stream().filter(s -> s.getName().equals(subforum.getName()))
+        Subforum foundSubforum = subforums.stream().filter(s -> s.getName().equals(subforum.getName()))
                 .findAny()
                 .orElse(null);
         if (foundSubforum == null) {
-            getSubforums().add(subforum);
-            saveSubforumList(getSubforums());
+            subforums.add(subforum);
+            saveSubforumList(subforums);
             return true;
         } else {
             return false;
@@ -154,7 +156,9 @@ public class SubforumServiceImpl implements SubforumService {
     }
 
     public final void init() {
-        subforums.add(new Subforum("forum1", "description1", null, null));
-        subforums.add(new Subforum("dva", "mlogo kul", "budite dobri", null));
+        UserModel moderator = UserServiceImpl.getInstance().getByRole(Role.MODERATOR);
+        subforums.add(new Subforum("forum1", "description1", "samo jako", null,  moderator));
+        subforums.add(new Subforum("dva", "mlogo kul", "budite dobri", null, moderator));
+        subforums.add(new Subforum("tri", "jako opasno", "dobri", null, moderator));
     }
 }

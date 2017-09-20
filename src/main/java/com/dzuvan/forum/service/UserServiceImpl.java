@@ -114,6 +114,14 @@ public class UserServiceImpl implements UserService {
                     .orElse(null);
         return (foundUser != null) ? foundUser : null;
     }
+
+    public UserModel getByRole(Role role) {
+        UserModel foundUser;
+        foundUser = getUsers().stream().filter(r->r.getRole().equals(role))
+                    .findFirst()
+                    .orElse(null);
+        return (foundUser != null) ? foundUser : null;
+    }
     
     @Override
     public UserModel getById(Integer id) {

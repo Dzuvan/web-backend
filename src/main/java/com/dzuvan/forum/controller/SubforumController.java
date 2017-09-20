@@ -16,8 +16,11 @@
  */
 package com.dzuvan.forum.controller;
 
+import com.dzuvan.forum.model.Role;
 import com.dzuvan.forum.model.Subforum;
+import com.dzuvan.forum.model.UserModel;
 import com.dzuvan.forum.service.SubforumServiceImpl;
+import com.dzuvan.forum.service.UserServiceImpl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -112,6 +115,7 @@ public class SubforumController {
      * @param file
      * @param rules
      * @param fileData
+     * @param id
      * @return
      */
     @POST
@@ -122,12 +126,14 @@ public class SubforumController {
                                 @FormDataParam("description") String description,
                                 @FormDataParam("rules") String rules,
                                 @FormDataParam("icon") InputStream file,
-                                @FormDataParam("icon") FormDataContentDisposition fileData) {
+                                @FormDataParam("icon") FormDataContentDisposition fileData,
+                                @FormDataParam("moderator")Integer id) {
 
-        String location = System.getProperty("user.dir") + fileData.getFileName();
-        Subforum subforum = new Subforum(name, description, rules, location);
+        String location = "/home/dzuvan/NetBeansProjects/front-end/dist/" + fileData.getFileName();
+        UserModel sentUser = UserServiceImpl.getInstance().getById(id);
+        if(sentUser.getRole() == Role.MODERATOR){
+            Subforum subforum = new Subforum(name, description, rules, fileData.getFileName(),sentUser);
         writeToFile(file, location);
-
         if (subforum.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity(subforum)
@@ -144,6 +150,9 @@ public class SubforumController {
                     .allow("OPTIONS")
                     .build();
         }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
      }
     
     /**
@@ -153,6 +162,7 @@ public class SubforumController {
      * @param rules
      * @param file
      * @param fileData
+     * @param id
      * @return
      */
     @PUT 
@@ -163,10 +173,13 @@ public class SubforumController {
                                 @FormDataParam("description") String description,
                                 @FormDataParam("rules") String rules,
                                 @FormDataParam("icon") InputStream file,
-                                @FormDataParam("icon") FormDataContentDisposition fileData) {
+                                @FormDataParam("icon") FormDataContentDisposition fileData,
+                                @FormDataParam("moderator")Integer id) {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        Subforum subforum = new Subforum(name, description, rules, location);
+        UserModel sentUser = UserServiceImpl.getInstance().getById(id);
+        if(sentUser.getRole() == Role.MODERATOR) {
+        Subforum subforum = new Subforum(name, description, rules, location, sentUser);
 
         if (subforum.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
@@ -182,6 +195,9 @@ public class SubforumController {
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
                     .allow("OPTIONS")
                     .build();
+        }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
 

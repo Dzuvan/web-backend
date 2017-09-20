@@ -40,10 +40,9 @@ public class UserModel implements Serializable {
     private String phone;
     private String email;
     private LocalDate registrationDate;
-    //TODO: Ovo bi možda moglo u neku drugu klasu kako bi ova bila isključivo za korisnike
-    private ArrayList<Theme> followedThemes = new ArrayList<>();
-    private ArrayList<Subforum> followedSubforums = new ArrayList<>();
-    private ArrayList<Comment> savedComments = new ArrayList<>();
+    private ArrayList<Integer> followedThemes = new ArrayList<>();
+    private ArrayList<Integer> followedSubforums = new ArrayList<>();
+    private ArrayList<Integer> savedComments = new ArrayList<>();
 
     /**
      *
@@ -52,7 +51,6 @@ public class UserModel implements Serializable {
         id = nextId;
         nextId++;
     }
-
 
     /**
      *
@@ -230,7 +228,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public ArrayList<Theme> getFollowedThemes() {
+    public ArrayList<Integer> getFollowedThemes() {
         return followedThemes;
     }
 
@@ -238,7 +236,7 @@ public class UserModel implements Serializable {
      *
      * @param followedThemes
      */
-    public void setFollowedThemes(ArrayList<Theme> followedThemes) {
+    public void setFollowedThemes(ArrayList<Integer> followedThemes) {
         this.followedThemes = followedThemes;
     }
 
@@ -246,7 +244,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public ArrayList<Subforum> getFollowedSubforums() {
+    public ArrayList<Integer> getFollowedSubforums() {
         return followedSubforums;
     }
 
@@ -254,7 +252,7 @@ public class UserModel implements Serializable {
      *
      * @param followedSubforums
      */
-    public void setFollowedSubforums(ArrayList<Subforum> followedSubforums) {
+    public void setFollowedSubforums(ArrayList<Integer> followedSubforums) {
         this.followedSubforums = followedSubforums;
     }
 
@@ -262,7 +260,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public ArrayList<Comment> getSavedComments() {
+    public ArrayList<Integer> getSavedComments() {
         return savedComments;
     }
 
@@ -270,7 +268,7 @@ public class UserModel implements Serializable {
      *
      * @param savedComments
      */
-    public void setSavedComments(ArrayList<Comment> savedComments) {
+    public void setSavedComments(ArrayList<Integer> savedComments) {
         this.savedComments = savedComments;
     }
 
