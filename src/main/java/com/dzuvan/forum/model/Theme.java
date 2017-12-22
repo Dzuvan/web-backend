@@ -28,11 +28,9 @@ import java.util.List;
 public class Theme implements Serializable {
 
     private static final long serialVersionUID = -9143705498330171960L;
-
-
-    private Integer id;
-    private static Integer nextId = 1;
-   
+    private static int nextId = 1;
+    
+    private int id;
     private Subforum subforum;
     private String title;
     private ThemeType type;
@@ -40,8 +38,8 @@ public class Theme implements Serializable {
     private List<Comment> comments;
     private String content;
     private LocalDate dateOfCreating;
-    private Integer likes;
-    private Integer dislikes;
+    private int likes;
+    private int dislikes;
 
     public Theme() {
         id = nextId;
@@ -62,8 +60,7 @@ public class Theme implements Serializable {
      */
     public Theme(Subforum subforum, String title, ThemeType type, 
                 UserModel author, List<Comment> comments, String content, 
-                LocalDate dateOfCreating, Integer likes, Integer dislikes) {
-        this();
+                LocalDate dateOfCreating, int likes, int dislikes) {
         this.subforum = subforum;
         this.title = title;
         this.type = type;
@@ -75,22 +72,13 @@ public class Theme implements Serializable {
         this.dislikes = dislikes;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
-
-    public static Integer getNextId() {
-        return nextId;
-    }
-
-    public static void setNextId(Integer nextId) {
-        Theme.nextId = nextId;
-    }
-    
 
     /**
      *
@@ -208,7 +196,7 @@ public class Theme implements Serializable {
      *
      * @return
      */
-    public Integer getLikes() {
+    public int getLikes() {
         return likes;
     }
 
@@ -216,7 +204,7 @@ public class Theme implements Serializable {
      *
      * @param likes
      */
-    public void setLikes(Integer likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 
@@ -224,7 +212,7 @@ public class Theme implements Serializable {
      *
      * @return
      */
-    public Integer getDislikes() {
+    public int getDislikes() {
         return dislikes;
     }
 
@@ -232,7 +220,7 @@ public class Theme implements Serializable {
      *
      * @param dislikes
      */
-    public void setDislikes(Integer dislikes) {
+    public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
     }
 

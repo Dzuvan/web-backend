@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.dzuvan.forum.model;
 
 import java.io.Serializable;
@@ -27,16 +26,15 @@ import java.time.LocalDate;
 public class Comment implements Serializable {
 
     private static final long serialVersionUID = -3812645247109314175L;
-
-    private Integer id;
     private static Integer nextId = 1;
 
+    private Integer id;
     private UserModel author;
     private LocalDate commentDate;
     private Comment parentComment;
     private String commentText;
-    private Integer likes;
-    private Integer dislikes;
+    private int likes;
+    private int dislikes;
     private boolean isEdited;
 
     /**
@@ -58,7 +56,7 @@ public class Comment implements Serializable {
      * @param isEdited
      */
     public Comment(UserModel author, LocalDate commentDate, Comment parentComment,
-            String commentText, Integer likes, Integer dislikes,
+            String commentText, int likes, int dislikes,
             boolean isEdited) {
         this();
         this.author = author;
@@ -70,19 +68,19 @@ public class Comment implements Serializable {
         this.isEdited = isEdited;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public static Integer getNextId() {
+    public static int getNextId() {
         return nextId;
     }
 
-    public static void setNextId(Integer nextId) {
+    public static void setNextId(int nextId) {
         Comment.nextId = nextId;
     }
 
@@ -93,8 +91,6 @@ public class Comment implements Serializable {
     public void setIsEdited(boolean isEdited) {
         this.isEdited = isEdited;
     }
-
-
 
     /**
      *
@@ -164,7 +160,7 @@ public class Comment implements Serializable {
      *
      * @return
      */
-    public Integer getLikes() {
+    public int getLikes() {
         return likes;
     }
 
@@ -172,7 +168,7 @@ public class Comment implements Serializable {
      *
      * @param likes
      */
-    public void setLikes(Integer likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 
@@ -180,7 +176,7 @@ public class Comment implements Serializable {
      *
      * @return
      */
-    public Integer getDislikes() {
+    public int getDislikes() {
         return dislikes;
     }
 
@@ -188,7 +184,7 @@ public class Comment implements Serializable {
      *
      * @param dislikes
      */
-    public void setDislikes(Integer dislikes) {
+    public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
     }
 

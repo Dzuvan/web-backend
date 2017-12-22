@@ -22,24 +22,45 @@ import com.dzuvan.forum.model.Comment;
  *
  * @author dzuvan
  */
-public interface CommentService extends GenericService<Comment>{
-
-    @Override
-    public void delete(Comment o);
-
-    @Override
-    public Comment getByString(String s);
-
-    @Override
-    public Comment getById(Integer id);
-
-    @Override
-    public Comment edit(Comment o, Integer id);
-
-    @Override
-    public boolean addOne(Comment o);
-
-    @Override
-    public Iterable getAll();
+public interface CommentService {
     
+    /**
+     *
+     * @param o
+     */
+    void delete(Comment o);
+
+    /**
+     *
+     * @param s
+     * @return
+     */
+    Comment getByString(String s);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Comment getById(Integer id);
+
+    /**
+     *
+     * @param o
+     * @param id
+     */
+    void edit(Comment o, Integer id);
+
+    /**
+     *
+     * @param o
+     * @return
+     */
+    boolean addOne(Comment o);
+
+    /**
+     *
+     * @return
+     */
+    Iterable getAll();
 }

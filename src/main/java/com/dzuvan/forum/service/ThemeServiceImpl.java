@@ -29,7 +29,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
 
 /**
@@ -42,6 +41,7 @@ public class ThemeServiceImpl implements ThemeService {
     private static final String DIRECTORY = System.getProperty("user.dir");
 
     private static ThemeServiceImpl instance = null;
+    private ArrayList<Theme> themes;
 
     /**
      * Singleton
@@ -51,45 +51,23 @@ public class ThemeServiceImpl implements ThemeService {
     public static ThemeServiceImpl getInstance() {
         if (instance == null) {
             instance = new ThemeServiceImpl();
+            instance.initialiseThemes();
         }
         return instance;
     }
-    private ArrayList<Theme> themes;
 
     private ThemeServiceImpl() {
-        themes = new ArrayList<>();
-        init();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public ArrayList<Theme> getThemes() {
-        try {
-            File file = new File(DIRECTORY, FILENAME);
-            if (!file.exists()) {
-                saveUserList(themes);
-            } else {
-                FileInputStream fis = new FileInputStream(file);
-                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    themes = (ArrayList<Theme>) ois.readObject();
-                }
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-        }
-
-        return themes;
     }
 
     /**
      *
      * @param themes
      */
-    public void saveUserList(ArrayList<Theme> themes) {
+    private void saveThemeList(ArrayList<Theme> themes) {
         try {
             File file = new File(DIRECTORY, FILENAME);
             FileOutputStream fos = new FileOutputStream(file);
+
             try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                 oos.writeObject(themes);
             }
@@ -100,11 +78,12 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public void delete(Theme o) {
-        Theme foundTheme = getThemes().stream().filter(t -> t.getTitle().equals(o.getTitle()))
+        Theme foundTheme = themes.stream().filter(t -> t.getTitle().equals(o.getTitle()))
                 .findAny()
                 .orElse(null);
         if (foundTheme != null) {
-            getThemes().remove(foundTheme);
+            themes.remove(foundTheme);
+            saveThemeList(themes);
         } else {
             Response.noContent().build();
         }
@@ -112,7 +91,7 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public Theme getByString(String s) {
-        Theme foundTheme = getThemes().stream().filter(t -> t.getTitle().equals(s))
+        Theme foundTheme = themes.stream().filter(t -> t.getTitle().equals(s))
                 .findAny()
                 .orElse(null);
         return (foundTheme != null) ? foundTheme : null;
@@ -120,7 +99,7 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public Theme getById(Integer id) {
-        Theme foundTheme = getThemes().stream().filter(t -> t.getId().equals(id))
+        Theme foundTheme = themes.stream().filter(t -> t.getId() == id)
                 .findAny()
                 .orElse(null);
         return (foundTheme != null) ? foundTheme : null;
@@ -128,45 +107,59 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Theme edit(Theme theme, Integer id) {
-        Theme foundTheme = getThemes().stream().filter(o -> o.getId().equals((id)))
+    public void edit(Theme theme, Integer id) {
+        Theme foundTheme = themes.stream().filter(o -> o.getId() == (id))
                 .findAny()
                 .orElse(null);
-        return (foundTheme != null) ? getThemes().set(id, theme) : null;
+        if (foundTheme != null) {
+            themes.set(id, theme);
+            saveThemeList(themes);
+        }
     }
 
     @Override
     public boolean addOne(Theme theme) {
-        Theme foundTheme = getThemes().stream().filter(t -> t.getId().equals(theme.getId()))
+        Theme foundTheme = themes.stream().filter(t -> t.getId() == theme.getId())
                 .findAny()
                 .orElse(null);
         if (foundTheme == null) {
-            getThemes().add(theme);
-            saveUserList(getThemes());
+            themes.add(theme);
+            saveThemeList(themes);
             return true;
         } else {
             return false;
         }
-
     }
 
     @Override
     public ArrayList<Theme> getAll() {
-        return getThemes();
+        return themes;
     }
 
     /**
      * Test data for themes.
      *
      */
-    public final void init() {
+    private void initialiseThemes() {
+        themes = new ArrayList<>();
         Subforum first = SubforumServiceImpl.getInstance().getById(1);
         UserModel one = UserServiceImpl.getInstance().getById(1);
 
-        getThemes().add(new Theme(first, "First theme", ThemeType.TEXT, one, null, "one two three", LocalDate.of(2017, 8, 8), 1, 0));
-        getThemes().add(new Theme(first, "Second theme", ThemeType.TEXT, one, null, "tototot", LocalDate.of(2017,8, 8), 5, 5));
-        getThemes().add(new Theme(first, "Third theme", ThemeType.TEXT, one, null, "ajajajaj", LocalDate.of(2017,8, 8), 0, 5));
+        themes.add(new Theme(first, "First theme", ThemeType.TEXT, one, null, "one two three", LocalDate.of(2017, 8, 8), 1, 0));
+        themes.add(new Theme(first, "Second theme", ThemeType.TEXT, one, null, "tototot", LocalDate.of(2017, 8, 8), 5, 5));
+        themes.add(new Theme(first, "Third theme", ThemeType.TEXT, one, null, "ajajajaj", LocalDate.of(2017, 8, 8), 0, 5));
 
+        try {
+            File file = new File(DIRECTORY, FILENAME);
+            if (!file.exists()) {
+                saveThemeList(themes);
+            } else {
+                FileInputStream fis = new FileInputStream(file);
+                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    themes = (ArrayList<Theme>) ois.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+        }
     }
-
 }

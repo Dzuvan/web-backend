@@ -22,24 +22,45 @@ import com.dzuvan.forum.model.UserModel;
  *
  * @author dzuvan
  */
-public interface UserService extends GenericService<UserModel>{
+public interface UserService {
 
-    @Override
-    public void delete(UserModel user);
+    /**
+     *
+     * @param user
+     */
+    void delete(UserModel user);
 
-    @Override
-    public UserModel getByString(String s);
+    /**
+     *
+     * @param s
+     * @return
+     */
+    UserModel getByString(String s);
 
-    @Override
-    public UserModel getById(Integer id);
+    /**
+     *
+     * @param id
+     * @return
+     */
+    UserModel getById(Integer id);
 
-    @Override
-    public UserModel edit(UserModel user, Integer id);
+    /**
+     *
+     * @param user
+     * @param id
+     */
+    void edit(UserModel user, Integer id);
 
-    @Override
-    public boolean addOne(UserModel user);
+    /**
+     *
+     * @param user
+     * @return
+     */
+    boolean addOne(UserModel user);
 
-    @Override
-    public Iterable getAll();
-    
+    /**
+     *
+     * @return
+     */
+    Iterable getAll();    
 }

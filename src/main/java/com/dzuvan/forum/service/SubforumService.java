@@ -23,24 +23,45 @@ import com.dzuvan.forum.model.Subforum;
  *
  * @author dzuvan
  */
-public interface SubforumService extends GenericService<Subforum> {
+public interface SubforumService {
 
-    @Override
-    public void delete(Subforum o);
+    /**
+     *
+     * @param o
+     */
+    void delete(Subforum o);
 
-    @Override
-    public Subforum getByString(String s);
+    /**
+     *
+     * @param s
+     * @return
+     */
+    Subforum getByString(String s);
 
-    @Override
-    public Subforum getById(Integer id);
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Subforum getById(Integer id);
 
-    @Override
-    public Subforum edit(Subforum o, Integer id);
+    /**
+     *
+     * @param o
+     * @param id
+     */
+    void edit(Subforum o, Integer id);
 
-    @Override
-    public boolean addOne(Subforum o);
+    /**
+     *
+     * @param o
+     * @return
+     */
+    boolean addOne(Subforum o);
 
-    @Override
-    public Iterable getAll();
-    
+    /**
+     *
+     * @return
+     */
+    Iterable getAll();
 }

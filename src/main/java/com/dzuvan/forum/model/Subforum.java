@@ -28,10 +28,9 @@ import java.util.List;
 public class Subforum implements Serializable {
 
     private static final long serialVersionUID = 3261045213287698581L;
-
-    private Integer id;
-    private static Integer nextId = 6;
-
+    private static int nextId = 1;
+    
+    private int id;
     private String name;
     private String description;
     private String icon;

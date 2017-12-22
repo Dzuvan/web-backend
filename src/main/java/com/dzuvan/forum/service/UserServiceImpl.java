@@ -13,7 +13,7 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package com.dzuvan.forum.service;
 
 import com.dzuvan.forum.model.Role;
@@ -35,140 +35,140 @@ import javax.ws.rs.core.Response;
  * @author dzuvan
  */
 public class UserServiceImpl implements UserService {
+
     private static final String FILENAME = "users.dat";
     private static final String DIRECTORY = System.getProperty("user.dir");
-    
+
     private static UserServiceImpl instance = null;
     private ArrayList<UserModel> users;
-    
+
     private UserServiceImpl() {
-                users =  new ArrayList<>();
-                init();
     }
-    
+
     /**
      * Singleton
+     *
      * @return instance
      */
     public static UserServiceImpl getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new UserServiceImpl();
+            instance.initialiseUsers();
         }
         return instance;
     }
-    
-    /**
-     *
-     * @return
-     */
-    
-    public ArrayList<UserModel> getUsers() {
-        try {
-            File file = new File(DIRECTORY, FILENAME);
-            if (!file.exists()) {
-                saveUserList(users);
-            }   else {
-                    FileInputStream fis = new FileInputStream(file);
-                    try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                        users = (ArrayList<UserModel>) ois.readObject();
-                    }
-                }
-        } catch (IOException | ClassNotFoundException ex) {}
-        
-        return users;
-    }
-    
+
     /**
      *
      * @param users
      */
-    public void saveUserList(ArrayList<UserModel> users) {
+    private void saveUserList(ArrayList<UserModel> users) {
         try {
             File file = new File(DIRECTORY, FILENAME);
             FileOutputStream fos = new FileOutputStream(file);
             try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                 oos.writeObject(users);
             }
-        } catch (FileNotFoundException ex){
-        } catch(IOException ex) {}
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+        }
     }
-    
+
     @Override
     public void delete(UserModel user) {
-        UserModel foundUser = getUsers().stream().filter(u->u.getUsername().equals(user.getUsername()))
-                              .findFirst()
-                              .orElse(null);
-        
-        if (foundUser != null)
-            getUsers().remove(foundUser);
-        else {
+        UserModel foundUser = users.stream().filter(u -> u.getUsername().equals(user.getUsername()))
+                .findFirst()
+                .orElse(null);
+
+        if (foundUser != null) {
+            users.remove(foundUser);
+            saveUserList(users);
+        } else {
             Response.noContent().build();
         }
     }
-    
+
     @Override
     public UserModel getByString(String s) {
         UserModel foundUser;
-        foundUser = getUsers().stream().filter(u->u.getUsername().equals(s))
-                    .findFirst()
-                    .orElse(null);
+        foundUser = users.stream().filter(u -> u.getUsername().equals(s))
+                .findFirst()
+                .orElse(null);
         return (foundUser != null) ? foundUser : null;
     }
 
     public UserModel getByRole(Role role) {
         UserModel foundUser;
-        foundUser = getUsers().stream().filter(r->r.getRole().equals(role))
-                    .findFirst()
-                    .orElse(null);
+        foundUser = users.stream().filter(r -> r.getRole().equals(role))
+                .findFirst()
+                .orElse(null);
         return (foundUser != null) ? foundUser : null;
     }
-    
+
     @Override
     public UserModel getById(Integer id) {
         UserModel foundUser;
-        foundUser = getUsers().stream().filter(u -> Objects.equals(u.getId(), id))
-                    .findAny()
-                    .orElse(null);
-        return (foundUser != null) ? foundUser : null;
-    }
-    
-    @Override
-    public UserModel edit(UserModel user, Integer id) {
-        UserModel foundUser = getUsers().stream().filter(u->Objects.equals(u.getId(), id))
+        foundUser = users.stream().filter(u -> (u.getId() == id))
                 .findAny()
                 .orElse(null);
-        return (foundUser != null) ? users.set(id, user) : null;
+        return (foundUser != null) ? foundUser : null;
     }
-    
+
+    @Override
+    public void edit(UserModel user, Integer id) {
+        UserModel foundUser = users.stream().filter(u -> (u.getId() == id))
+                .findAny()
+                .orElse(null);
+        if (foundUser != null) {
+            users.set(id, user);
+            saveUserList(users);
+        }
+    }
+
     @Override
     public boolean addOne(UserModel user) {
-        UserModel foundUser = getUsers().stream().filter(u->u.getUsername().equals(user.getUsername()))
+        UserModel foundUser = users.stream().filter(u -> u.getUsername().equals(user.getUsername()))
                 .findAny()
                 .orElse(null);
 
-            if (foundUser == null) {
-                users.add(user);
-                saveUserList(getUsers());
-                return true;
-            }   else 
-                    return false;
+        if (foundUser == null) {
+            users.add(user);
+            saveUserList(users);
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
     @Override
     public ArrayList<UserModel> getAll() {
-        return getUsers();
+        return users;
     }
-    
-    public final void init(){
-        getUsers().add(new UserModel( "admin", "admin", "marko", "markovic",
+
+    private void initialiseUsers() {
+        users = new ArrayList<>();
+
+        users.add(new UserModel("admin", "admin", "marko", "markovic",
                 Role.ADMINISTRATOR, "555-333", "marko@markovic.com", LocalDate.of(2017, 8, 10)));
-        
-        
-        getUsers().add(new UserModel( "mode", "mode", "milan", "milankovic",
+
+        users.add(new UserModel("mode", "mode", "milan", "milankovic",
                 Role.MODERATOR, "666-333", "milan@gmail.com", LocalDate.of(2017, 8, 18)));
-        
-        
-        getUsers().add(new UserModel("first", "users", "jovan", "jovannovci",
+
+        users.add(new UserModel("first", "users", "jovan", "jovannovci",
                 Role.USER, "444-333", "jovan@gmail.com", LocalDate.of(2017, 9, 18)));
+
+        try {
+            File file = new File(DIRECTORY, FILENAME);
+
+            if (!file.exists()) {
+                saveUserList(users);
+            } else {
+                FileInputStream fis = new FileInputStream(file);
+                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    users = (ArrayList<UserModel>) ois.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+        }
     }
 }

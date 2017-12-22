@@ -27,22 +27,20 @@ import java.util.ArrayList;
 public class UserModel implements Serializable {
 
     private static final long serialVersionUID = -4156591132476352712L;
+    private static int nextId = 1;
 
-    private static Integer nextId = 1;
-    private Integer id;
-
+    private int id;
     private String username;
     private String password;
-
     private String firstName;
     private String lastName;
     private Role role;
     private String phone;
     private String email;
     private LocalDate registrationDate;
-    private ArrayList<Integer> followedThemes = new ArrayList<>();
-    private ArrayList<Integer> followedSubforums = new ArrayList<>();
-    private ArrayList<Integer> savedComments = new ArrayList<>();
+    private ArrayList<Integer> followedThemes;
+    private ArrayList<Integer> followedSubforums;
+    private ArrayList<Integer> savedComments;
 
     /**
      *
@@ -132,7 +130,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -140,7 +138,7 @@ public class UserModel implements Serializable {
      *
      * @param id
      */
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

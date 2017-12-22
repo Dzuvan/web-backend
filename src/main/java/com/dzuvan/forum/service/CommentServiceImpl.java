@@ -32,38 +32,20 @@ public class CommentServiceImpl implements CommentService {
     private static final String DIRECTORY = System.getProperty("user.dir");
 
     private static CommentServiceImpl instance = null;
+    private ArrayList<Comment> comments;
+
     public static CommentServiceImpl getInstance() {
         if (instance == null) {
             instance = new CommentServiceImpl();
+            instance.initialiseComments();
         }
         return instance;
     }
-    private ArrayList<Comment> comments;
 
     private CommentServiceImpl() {
-        comments = new ArrayList<>();
-        init();
     }
 
-
-    public ArrayList<Comment> getComments() {
-        try {
-            File file = new File(DIRECTORY, FILENAME);
-
-            if (!file.exists()) {
-                saveComments(comments);
-            } else {
-                FileInputStream fis = new FileInputStream(file);
-                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    comments = (ArrayList<Comment>) ois.readObject();
-                }
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-        }
-        return comments;
-    }
-
-    public void saveComments(ArrayList<Comment> comments) {
+    private void saveComments(ArrayList<Comment> comments) {
         try {
             File file = new File(DIRECTORY, FILENAME);
             FileOutputStream fos = new FileOutputStream(file);
@@ -77,17 +59,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ArrayList<Comment> getAll() {
-        return getComments();
+        return comments;
     }
 
     @Override
     public boolean addOne(Comment comment) {
-        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(comment.getId()))
+        Comment foundComment = comments.stream().filter(c -> c.getId() == comment.getId())
                 .findAny()
                 .orElse(null);
         if (foundComment == null) {
-            getComments().add(comment);
-            saveComments(getComments());
+            comments.add(comment);
+            saveComments(comments);
             return true;
         } else {
             return false;
@@ -95,23 +77,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment edit(Comment comment, Integer id) {
-        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(comment.getId()))
+    public void edit(Comment comment, Integer id) {
+        Comment foundComment = comments.stream().filter(c -> c.getId() == comment.getId())
                 .findAny()
                 .orElse(null);
         if (foundComment != null) {
-            getComments().set(id, comment);
-            saveComments(getComments());
-            return comment;
-
-        } else {
-            return null;
+            comments.set(id, comment);
+            saveComments(comments);
         }
     }
 
     @Override
     public Comment getById(Integer id) {
-        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(id))
+        Comment foundComment = comments.stream().filter(c -> c.getId() == id)
                 .findAny()
                 .orElse(null);
         return (foundComment != null) ? foundComment : null;
@@ -119,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getByString(String s) {
-        Comment foundComment = getComments().stream().filter(c -> c.getCommentText().equals(s))
+        Comment foundComment = comments.stream().filter(c -> c.getCommentText().equals(s))
                 .findAny()
                 .orElse(null);
         return (foundComment != null) ? foundComment : null;
@@ -127,16 +105,30 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void delete(Comment o) {
-        Comment foundComment = getComments().stream().filter(c -> c.getId().equals(o.getId()))
+        Comment foundComment = comments.stream().filter(c -> c.getId() == o.getId())
                 .findFirst()
                 .orElse(null);
         if (foundComment != null) {
-            getComments().remove(foundComment);
+            comments.remove(foundComment);
+            saveComments(comments);
         }
     }
 
-    public final void init() {
+    private void initialiseComments() {
+        comments = new ArrayList<>();
 
+        try {
+            File file = new File(DIRECTORY, FILENAME);
+
+            if (!file.exists()) {
+                saveComments(comments);
+            } else {
+                FileInputStream fis = new FileInputStream(file);
+                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    comments = (ArrayList<Comment>) ois.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+        }
     }
-
 }

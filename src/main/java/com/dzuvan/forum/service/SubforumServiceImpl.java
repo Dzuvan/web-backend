@@ -37,12 +37,10 @@ public class SubforumServiceImpl implements SubforumService {
     private static final String FILENAME = "subforums.dat";
     private static final String DIRECTORY = System.getProperty("user.dir");
 
-    private ArrayList<Subforum> subforums;
     private static SubforumServiceImpl instance = null;
+    private ArrayList<Subforum> subforums;
 
     private SubforumServiceImpl() {
-        subforums = new ArrayList<>();
-        init();
     }
 
     /**
@@ -52,38 +50,18 @@ public class SubforumServiceImpl implements SubforumService {
     public static SubforumServiceImpl getInstance() {
         if (instance == null) {
             instance = new SubforumServiceImpl();
+            instance.initialiseSubforums();
         }
         return instance;
     }
 
     /**
      *
-     * @return
-     */
-    public ArrayList<Subforum> getSubforums() {
-        try {
-            File file = new File(DIRECTORY, FILENAME);
-
-            if (!file.exists()) {
-                saveSubforumList(subforums);
-            } else {
-                FileInputStream fis = new FileInputStream(file);
-                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    subforums = (ArrayList<Subforum>) ois.readObject();
-                }
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-        }
-
-        return subforums;
-    }
-
-    /**
-     *
      * @param subforums
      */
-    public void saveSubforumList(ArrayList<Subforum> subforums) {
+    private void saveSubforumList(ArrayList<Subforum> subforums) {
         try {
+
             File file = new File(DIRECTORY, FILENAME);
             FileOutputStream fos = new FileOutputStream(file);
 
@@ -101,7 +79,8 @@ public class SubforumServiceImpl implements SubforumService {
                 .findFirst()
                 .orElse(null);
         if (foundSubforum != null) {
-            getSubforums().remove(foundSubforum);
+            subforums.remove(foundSubforum);
+            saveSubforumList(subforums);
         }
     }
 
@@ -123,16 +102,13 @@ public class SubforumServiceImpl implements SubforumService {
     }
 
     @Override
-    public Subforum edit(Subforum subforum, Integer id) {
+    public void edit(Subforum subforum, Integer id) {
         subforum = subforums.stream().filter(s -> s.getId() == id)
                 .findFirst()
                 .orElse(null);
         if (subforum != null) {
-            getSubforums().set(id, subforum);
-            saveSubforumList(getSubforums());
-            return subforum;
-        } else {
-            return null;
+            subforums.set(id, subforum);
+            saveSubforumList(subforums);
         }
     }
 
@@ -152,13 +128,29 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public ArrayList<Subforum> getAll() {
-        return getSubforums();
+        return subforums;
     }
 
-    public final void init() {
+    private void initialiseSubforums() {
+        subforums = new ArrayList<>();
+
         UserModel moderator = UserServiceImpl.getInstance().getByRole(Role.MODERATOR);
-        subforums.add(new Subforum("forum1", "description1", "samo jako", null,  moderator));
+        subforums.add(new Subforum("forum1", "description1", "samo jako", null, moderator));
         subforums.add(new Subforum("dva", "mlogo kul", "budite dobri", null, moderator));
         subforums.add(new Subforum("tri", "jako opasno", "dobri", null, moderator));
+
+        try {
+            File file = new File(DIRECTORY, FILENAME);
+
+            if (!file.exists()) {
+                saveSubforumList(subforums);
+            } else {
+                FileInputStream fis = new FileInputStream(file);
+                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    subforums = (ArrayList<Subforum>) ois.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+        }
     }
 }

@@ -22,6 +22,7 @@ package com.dzuvan.forum.model;
  */
 public class Message {
 
+    //TODO(Jovan): ID.
     private UserModel Sender;
     private UserModel Reciever;
     private String content;

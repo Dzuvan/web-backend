@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.dzuvan.forum.controller;
 
 import com.dzuvan.forum.model.Role;
@@ -39,33 +38,32 @@ import javax.ws.rs.core.Response;
  *
  * @author dzuvan
  */
-
 @Path("/userService")
 public class UserController {
 
     /**
      *
      * @return Response, cuz CORS
-
+     *
      */
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllUsers(){
+    public Response getAllUsers() {
         ArrayList<UserModel> users = UserServiceImpl.getInstance().getAll();
-        return  Response.ok()
-                        .entity(users)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+        return Response.ok()
+                .entity(users)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 
     /**
      *
      * @param id
      * @return Response, cuz CORS
-
+     *
      */
     @GET
     @Path("/users/{id}")
@@ -73,18 +71,18 @@ public class UserController {
     public Response getUserById(@PathParam("id") Integer id) {
         UserModel user = UserServiceImpl.getInstance().getById(id);
         return Response.ok()
-                        .entity(user)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+                .entity(user)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 
     /**
      *
      * @param username
      * @return Response, cuz CORS
-
+     *
      */
     @GET
     @Path("/users/user/{username}")
@@ -92,11 +90,11 @@ public class UserController {
     public Response getUserByUsername(@PathParam("username") String username) {
         UserModel user = UserServiceImpl.getInstance().getByString(username);
         return Response.ok()
-                        .entity(user)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+                .entity(user)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 
     /**
@@ -113,22 +111,22 @@ public class UserController {
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response addUser(@FormParam ("username") String username,
-                            @FormParam ("password") String password,
-                            @FormParam ("firstName") String firstName,
-                            @FormParam ("lastName") String lastName,
-                            @FormParam ("phone") String phone,
-                            @FormParam ("email") String email) {
+    public Response addUser(@FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("firstName") String firstName,
+            @FormParam("lastName") String lastName,
+            @FormParam("phone") String phone,
+            @FormParam("email") String email) {
         UserModel user = new UserModel(username, password, firstName, lastName,
-               Role.USER ,phone, email, LocalDate.now());
+                Role.USER, phone, email, LocalDate.now());
         UserServiceImpl.getInstance().addOne(user);
 
         return Response.status(Response.Status.CREATED)
-                        .entity(user)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+                .entity(user)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 
     /**
@@ -146,33 +144,33 @@ public class UserController {
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response updateUser( @FormParam ("username") String username,
-                                @FormParam ("password") String password,
-                                @FormParam ("firstName") String firstName,
-                                @FormParam ("lastName") String lastName,
-                                @FormParam ("phone") String phone,
-                                @FormParam ("email") String email,
-                                @FormParam ("role") Role role) {
+    public Response updateUser(@FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("firstName") String firstName,
+            @FormParam("lastName") String lastName,
+            @FormParam("phone") String phone,
+            @FormParam("email") String email,
+            @FormParam("role") Role role) {
         UserModel user = new UserModel(username, password, firstName, lastName,
-              role ,phone, email, LocalDate.now());
-        
+                role, phone, email, LocalDate.now());
+
         if (user.getId() != -1) {
             UserServiceImpl.getInstance().edit(user, user.getId());
             return Response.status(Response.Status.OK)
-                        .entity(user)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+                    .entity(user)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .allow("OPTIONS")
+                    .build();
 
-        }   else {
-                return Response.status(Response.Status.NO_CONTENT)
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                            .allow("OPTIONS")
-                            .build();
-            
-            }
+        } else {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .allow("OPTIONS")
+                    .build();
+
+        }
     }
 
     /**
@@ -184,22 +182,14 @@ public class UserController {
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@PathParam("id") Integer id) {
-    
+
         UserModel user = UserServiceImpl.getInstance().getById(id);
-        if (user.getId() != -1) {
-                UserServiceImpl.getInstance().delete(user);
-                return Response.ok()
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
-        }   else {
-             return Response.status(Response.Status.NO_CONTENT)
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                            .allow("OPTIONS")
-                            .build();
-        }
+        UserServiceImpl.getInstance().delete(user);
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 
     /**
@@ -213,33 +203,34 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(@FormParam("username") String username,
-                          @FormParam("password")String password) {
-        UserModel user =  UserServiceImpl.getInstance().getByString(username);
+            @FormParam("password") String password) {
+        UserModel user = UserServiceImpl.getInstance().getByString(username);
         if (user != null && user.getPassword().equals(password)) {
             return Response.ok()
-                        .entity(user)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
-        }   else {
+                    .entity(user)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .allow("OPTIONS")
+                    .build();
+        } else {
             return Response.status(Response.Status.UNAUTHORIZED)
-                        .entity(user)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+                    .entity(user)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .allow("OPTIONS")
+                    .build();
         }
     }
 
     /**
-     *Vrlo moguće da je suvišno.
+     * Vrlo moguće da je suvišno.
+     *
      * @return
      */
     @OPTIONS
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSupportedOperations () {
-    return "<operations>GET, PUT, POST, DELETE</operations>";
+    public String getSupportedOperations() {
+        return "<operations>GET, PUT, POST, DELETE</operations>";
     }
 }

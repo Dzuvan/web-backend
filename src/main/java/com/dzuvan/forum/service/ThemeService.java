@@ -22,24 +22,45 @@ import com.dzuvan.forum.model.Theme;
  *
  * @author dzuvan
  */
-public interface ThemeService extends GenericService<Theme>{
+public interface ThemeService {
 
-    @Override
-    public void delete(Theme o);
+    /**
+     *
+     * @param theme
+     */
+    void delete(Theme theme);
 
-    @Override
-    public Theme getByString(String s);
+    /**
+     *
+     * @param s
+     * @return
+     */
+    Theme getByString(String s);
 
-    @Override
-    public Theme getById(Integer id);
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Theme getById(Integer id);
 
-    @Override
-    public Theme edit(Theme o, Integer id);
+    /**
+     *
+     * @param theme
+     * @param id
+     */
+    void edit(Theme theme, Integer id);
 
-    @Override
-    public boolean addOne(Theme o);
+    /**
+     *
+     * @param theme
+     * @return
+     */
+    boolean addOne(Theme theme);
 
-    @Override
-    public Iterable getAll();
-    
+    /**
+     *
+     * @return
+     */
+    Iterable getAll();
 }
