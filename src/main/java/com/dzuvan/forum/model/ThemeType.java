@@ -25,15 +25,13 @@ public enum ThemeType {
     /**
      *
      */
-    TEXT,    
-
+    TEXT,
     /**
      *
      */
-    IMAGE,    
-
+    IMAGE,
     /**
      *
      */
-    LINK    
+    LINK
 }

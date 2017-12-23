@@ -27,7 +27,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Objects;
 import javax.ws.rs.core.Response;
 
 /**
@@ -82,6 +81,10 @@ public class UserServiceImpl implements UserService {
 
         if (foundUser != null) {
             users.remove(foundUser);
+            users.stream().filter((u) -> (u.getId() > foundUser.getId())).forEachOrdered((u) -> {
+                int i = u.getId();
+                u.setId(i--);
+            });
             saveUserList(users);
         } else {
             Response.noContent().build();

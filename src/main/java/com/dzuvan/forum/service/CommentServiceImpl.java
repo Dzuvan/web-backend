@@ -110,6 +110,10 @@ public class CommentServiceImpl implements CommentService {
                 .orElse(null);
         if (foundComment != null) {
             comments.remove(foundComment);
+            comments.stream().filter((c) -> (c.getId() > foundComment.getId())).forEachOrdered((c) -> {
+                int i = c.getId();
+                c.setId(i--);
+            });
             saveComments(comments);
         }
     }

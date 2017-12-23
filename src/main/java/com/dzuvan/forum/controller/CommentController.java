@@ -134,22 +134,13 @@ public class CommentController {
         Comment parentModel = CommentServiceImpl.getInstance().getByString(parent);
         Comment comment = new Comment(authorModel, LocalDate.now(), parentModel,
                 text, likes, dislikes, isEdited);
-        if (comment.getId() == 0) {
-            return Response.status(Response.Status.NO_CONTENT)
-                    .entity(comment)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        } else {
-            CommentServiceImpl.getInstance().addOne(comment);
-            return Response.status(Response.Status.CREATED)
-                    .entity(comment)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        }
+        CommentServiceImpl.getInstance().addOne(comment);
+        return Response.status(Response.Status.CREATED)
+                .entity(comment)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 
     @PUT
@@ -191,23 +182,13 @@ public class CommentController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteComment(@PathParam("id") Integer id) {
         Comment comment = CommentServiceImpl.getInstance().getById(id);
-
-        if (comment.getId() == 0) {
-            return Response.status(Response.Status.NO_CONTENT)
-                    .entity(comment)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        } else {
-            CommentServiceImpl.getInstance().delete(comment);
-            return Response.status(Response.Status.OK)
-                    .entity(comment)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        }
-
+        CommentServiceImpl.getInstance().delete(comment);
+        
+        return Response.status(Response.Status.OK)
+                .entity(comment)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .allow("OPTIONS")
+                .build();
     }
 }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.dzuvan.forum.model;
 
 import java.io.Serializable;
@@ -29,7 +28,7 @@ public class Theme implements Serializable {
 
     private static final long serialVersionUID = -9143705498330171960L;
     private static int nextId = 1;
-    
+
     private int id;
     private Subforum subforum;
     private String title;
@@ -58,9 +57,9 @@ public class Theme implements Serializable {
      * @param likes
      * @param dislikes
      */
-    public Theme(Subforum subforum, String title, ThemeType type, 
-                UserModel author, List<Comment> comments, String content, 
-                LocalDate dateOfCreating, int likes, int dislikes) {
+    public Theme(Subforum subforum, String title, ThemeType type,
+            UserModel author, List<Comment> comments, String content,
+            LocalDate dateOfCreating, int likes, int dislikes) {
         this.subforum = subforum;
         this.title = title;
         this.type = type;
@@ -229,8 +228,4 @@ public class Theme implements Serializable {
         return "Theme{" + "id=" + id + ", subforum=" + subforum + ", title=" + title + ", type=" + type + ", author=" + author + ", comments=" + comments + ", content=" + content + ", dateOfCreating=" + dateOfCreating + ", likes=" + likes + ", dislikes=" + dislikes + '}';
     }
 
-
-    
-
-    
 }

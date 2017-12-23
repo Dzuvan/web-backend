@@ -80,6 +80,10 @@ public class SubforumServiceImpl implements SubforumService {
                 .orElse(null);
         if (foundSubforum != null) {
             subforums.remove(foundSubforum);
+            subforums.stream().filter((s) -> (s.getId() > foundSubforum.getId())).forEachOrdered((s) -> {
+                int i = s.getId();
+                s.setId(i--);
+            });
             saveSubforumList(subforums);
         }
     }

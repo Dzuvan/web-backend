@@ -83,6 +83,10 @@ public class ThemeServiceImpl implements ThemeService {
                 .orElse(null);
         if (foundTheme != null) {
             themes.remove(foundTheme);
+            themes.stream().filter((t) -> (t.getId() > foundTheme.getId())).forEachOrdered((t) -> {
+                int i = t.getId();
+                t.setId(i--);
+            });
             saveThemeList(themes);
         } else {
             Response.noContent().build();

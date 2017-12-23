@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.dzuvan.forum.model;
-
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author dzuvan
@@ -29,7 +28,7 @@ public class Subforum implements Serializable {
 
     private static final long serialVersionUID = 3261045213287698581L;
     private static int nextId = 1;
-    
+
     private int id;
     private String name;
     private String description;
@@ -51,8 +50,8 @@ public class Subforum implements Serializable {
      * @param icon
      * @param responsibleModerator
      */
-    public Subforum (String name, String description, String rules,
-            String icon, UserModel responsibleModerator) { 
+    public Subforum(String name, String description, String rules,
+            String icon, UserModel responsibleModerator) {
         this();
         this.name = name;
         this.description = description;
@@ -61,7 +60,6 @@ public class Subforum implements Serializable {
         this.moderators = new ArrayList<>();
         this.responsibleModerator = responsibleModerator;
     }
-
 
     /**
      *
@@ -179,6 +177,5 @@ public class Subforum implements Serializable {
     public String toString() {
         return "Subforum{" + "id=" + id + ", name=" + name + ", description=" + description + ", icon=" + icon + ", rules=" + rules + ", responsibleModerator=" + responsibleModerator + ", moderators=" + moderators + '}';
     }
-
 
 }

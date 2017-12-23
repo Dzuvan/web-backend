@@ -26,7 +26,7 @@ public class Message {
     private UserModel Sender;
     private UserModel Reciever;
     private String content;
-    private boolean isRead;    
+    private boolean isRead;
 
     /**
      *
@@ -41,8 +41,8 @@ public class Message {
      * @param content
      * @param isRead
      */
-    public Message(UserModel Sender, UserModel Reciever, String content, 
-                     boolean isRead) {
+    public Message(UserModel Sender, UserModel Reciever, String content,
+            boolean isRead) {
         this.Sender = Sender;
         this.Reciever = Reciever;
         this.content = content;
@@ -118,5 +118,4 @@ public class Message {
         return "Message{" + "Sender=" + Sender + ", Reciever=" + Reciever + ", content=" + content + ", isRead=" + isRead + '}';
     }
 
-    
 }
