@@ -128,12 +128,11 @@ public class SubforumController {
             @FormDataParam("description") String description,
             @FormDataParam("rules") String rules,
             @FormDataParam("icon") InputStream file,
-            @FormDataParam("icon") FormDataContentDisposition fileData,
-            @FormDataParam("moderator") Integer id) {
+            @FormDataParam("icon") FormDataContentDisposition fileData) {
 
         String location = "/home/dzuvan/NetBeansProjects/front-end/dist/" + fileData.getFileName();
-        UserModel sender = UserServiceImpl.getInstance().getById(id);
-        if (sender.getRole() == Role.MODERATOR) {
+         UserModel sender = UserServiceImpl.getInstance().getById(2);
+         if (sender.getRole() == Role.MODERATOR || sender.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, fileData.getFileName(), sender);
             writeToFile(file, location);
             SubforumServiceImpl.getInstance().addOne(subforum);
@@ -171,7 +170,7 @@ public class SubforumController {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
         UserModel sentUser = UserServiceImpl.getInstance().getById(id);
-        if (sentUser.getRole() == Role.MODERATOR) {
+        if (sentUser.getRole() == Role.MODERATOR || sentUser.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, location, sentUser);
 
             SubforumServiceImpl.getInstance().edit(subforum, subforum.getId());

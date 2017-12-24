@@ -56,7 +56,7 @@ public interface ThemeService {
      * @param theme
      * @return
      */
-    boolean addOne(Theme theme);
+    void addOne(Theme theme);
 
     /**
      *

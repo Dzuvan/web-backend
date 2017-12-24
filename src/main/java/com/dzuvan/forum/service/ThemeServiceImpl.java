@@ -87,9 +87,6 @@ public class ThemeServiceImpl implements ThemeService {
                 int i = t.getId();
                 t.setId(i--);
             });
-            saveThemeList(themes);
-        } else {
-            Response.noContent().build();
         }
     }
 
@@ -98,7 +95,7 @@ public class ThemeServiceImpl implements ThemeService {
         Theme foundTheme = themes.stream().filter(t -> t.getTitle().equals(s))
                 .findAny()
                 .orElse(null);
-        return (foundTheme != null) ? foundTheme : null;
+        return foundTheme;
     }
 
     @Override
@@ -106,7 +103,7 @@ public class ThemeServiceImpl implements ThemeService {
         Theme foundTheme = themes.stream().filter(t -> t.getId() == id)
                 .findAny()
                 .orElse(null);
-        return (foundTheme != null) ? foundTheme : null;
+        return foundTheme;
 
     }
 
@@ -122,17 +119,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public boolean addOne(Theme theme) {
-        Theme foundTheme = themes.stream().filter(t -> t.getId() == theme.getId())
-                .findAny()
-                .orElse(null);
-        if (foundTheme == null) {
-            themes.add(theme);
-            saveThemeList(themes);
-            return true;
-        } else {
-            return false;
-        }
+    public void addOne(Theme theme) {
+        themes.add(theme);
     }
 
     @Override

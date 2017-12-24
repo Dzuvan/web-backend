@@ -63,17 +63,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean addOne(Comment comment) {
-        Comment foundComment = comments.stream().filter(c -> c.getId() == comment.getId())
-                .findAny()
-                .orElse(null);
-        if (foundComment == null) {
-            comments.add(comment);
-            saveComments(comments);
-            return true;
-        } else {
-            return false;
-        }
+    public void addOne(Comment comment) {
+        comments.add(comment);
     }
 
     @Override
@@ -92,7 +83,7 @@ public class CommentServiceImpl implements CommentService {
         Comment foundComment = comments.stream().filter(c -> c.getId() == id)
                 .findAny()
                 .orElse(null);
-        return (foundComment != null) ? foundComment : null;
+        return foundComment;
     }
 
     @Override
@@ -100,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
         Comment foundComment = comments.stream().filter(c -> c.getCommentText().equals(s))
                 .findAny()
                 .orElse(null);
-        return (foundComment != null) ? foundComment : null;
+        return foundComment;
     }
 
     @Override

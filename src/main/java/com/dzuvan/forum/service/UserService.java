@@ -54,9 +54,8 @@ public interface UserService {
     /**
      *
      * @param user
-     * @return
      */
-    boolean addOne(UserModel user);
+    void addOne(UserModel user);
 
     /**
      *

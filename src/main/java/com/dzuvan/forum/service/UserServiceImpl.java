@@ -27,7 +27,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -86,18 +85,15 @@ public class UserServiceImpl implements UserService {
                 u.setId(i--);
             });
             saveUserList(users);
-        } else {
-            Response.noContent().build();
         }
     }
 
     @Override
-    public UserModel getByString(String s) {
-        UserModel foundUser;
-        foundUser = users.stream().filter(u -> u.getUsername().equals(s))
+    public UserModel getByString(String username) {
+        UserModel found = users.stream().filter(u -> u.getUsername().equals(username))
                 .findFirst()
                 .orElse(null);
-        return (foundUser != null) ? foundUser : null;
+        return found;
     }
 
     public UserModel getByRole(Role role) {
@@ -105,16 +101,16 @@ public class UserServiceImpl implements UserService {
         foundUser = users.stream().filter(r -> r.getRole().equals(role))
                 .findFirst()
                 .orElse(null);
-        return (foundUser != null) ? foundUser : null;
+        return foundUser;
     }
 
     @Override
     public UserModel getById(Integer id) {
         UserModel foundUser;
         foundUser = users.stream().filter(u -> (u.getId() == id))
-                .findAny()
+                .findFirst()
                 .orElse(null);
-        return (foundUser != null) ? foundUser : null;
+        return foundUser;
     }
 
     @Override
@@ -129,18 +125,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addOne(UserModel user) {
-        UserModel foundUser = users.stream().filter(u -> u.getUsername().equals(user.getUsername()))
-                .findAny()
-                .orElse(null);
-
-        if (foundUser == null) {
-            users.add(user);
-            saveUserList(users);
-            return true;
-        } else {
-            return false;
-        }
+    public void addOne(UserModel user) {
+        users.add(user);
     }
 
     @Override

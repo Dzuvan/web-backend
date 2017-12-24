@@ -56,7 +56,7 @@ public interface CommentService {
      * @param o
      * @return
      */
-    boolean addOne(Comment o);
+    void addOne(Comment o);
 
     /**
      *

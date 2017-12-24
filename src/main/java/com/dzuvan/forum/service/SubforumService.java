@@ -57,7 +57,7 @@ public interface SubforumService {
      * @param o
      * @return
      */
-    boolean addOne(Subforum o);
+    void addOne(Subforum o);
 
     /**
      *

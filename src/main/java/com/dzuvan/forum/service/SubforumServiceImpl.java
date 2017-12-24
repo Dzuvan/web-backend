@@ -93,7 +93,7 @@ public class SubforumServiceImpl implements SubforumService {
         Subforum foundSubforum = subforums.stream().filter(s -> s.getName().equals(name))
                 .findFirst()
                 .orElse(null);
-        return (foundSubforum != null) ? foundSubforum : null;
+        return foundSubforum;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class SubforumServiceImpl implements SubforumService {
         foundSubforum = subforums.stream().filter(s -> s.getId() == id)
                 .findFirst()
                 .orElse(null);
-        return (foundSubforum != null) ? foundSubforum : null;
+        return foundSubforum;
     }
 
     @Override
@@ -117,17 +117,8 @@ public class SubforumServiceImpl implements SubforumService {
     }
 
     @Override
-    public boolean addOne(Subforum subforum) {
-        Subforum foundSubforum = subforums.stream().filter(s -> s.getName().equals(subforum.getName()))
-                .findAny()
-                .orElse(null);
-        if (foundSubforum == null) {
-            subforums.add(subforum);
-            saveSubforumList(subforums);
-            return true;
-        } else {
-            return false;
-        }
+    public void addOne(Subforum subforum) {
+        subforums.add(subforum);
     }
 
     @Override
