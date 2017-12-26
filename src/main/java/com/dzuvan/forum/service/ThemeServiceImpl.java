@@ -82,11 +82,17 @@ public class ThemeServiceImpl implements ThemeService {
                 .findAny()
                 .orElse(null);
         if (foundTheme != null) {
+            for (Theme s : themes) {
+                if (s.getId() > foundTheme.getId()) {
+                    Theme.setNextId(Subforum.getNextId() - 1);
+                    s.setId(s.getId() - 1);
+                }
+            }
             themes.remove(foundTheme);
-            themes.stream().filter((t) -> (t.getId() > foundTheme.getId())).forEachOrdered((t) -> {
-                int i = t.getId();
-                t.setId(i--);
-            });
+            if (themes.isEmpty()) {
+                Theme.setNextId(1);
+            }
+            saveThemeList(themes);
         }
     }
 

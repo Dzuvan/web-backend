@@ -68,26 +68,50 @@ public class Comment implements Serializable {
         this.isEdited = isEdited;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public static int getNextId() {
         return nextId;
     }
 
+    /**
+     *
+     * @param nextId
+     */
     public static void setNextId(int nextId) {
         Comment.nextId = nextId;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isIsEdited() {
         return isEdited;
     }
 
+    /**
+     *
+     * @param isEdited
+     */
     public void setIsEdited(boolean isEdited) {
         this.isEdited = isEdited;
     }
@@ -203,7 +227,7 @@ public class Comment implements Serializable {
     public void setisEdited(boolean isEdited) {
         this.isEdited = isEdited;
     }
-
+    
     @Override
     public String toString() {
         return "Comment{" + "id=" + id + ", author=" + author + ", commentDate=" + commentDate + ", parentComment=" + parentComment + ", commentText=" + commentText + ", likes=" + likes + ", dislikes=" + dislikes + ", isEdited=" + isEdited + '}';

@@ -270,6 +270,14 @@ public class UserModel implements Serializable {
         this.savedComments = savedComments;
     }
 
+    public static int getNextId() {
+        return nextId;
+    }
+
+    public static void setNextId(int nextId) {
+        UserModel.nextId = nextId;
+    }
+
     @Override
     public String toString() {
         return "UserDetails{" + "id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", phone=" + phone + ", email=" + email + ", registrationDate=" + registrationDate + ", followedThemes=" + followedThemes + ", followedSubforums=" + followedSubforums + ", savedComments=" + savedComments + '}';

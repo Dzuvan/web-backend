@@ -223,6 +223,22 @@ public class Theme implements Serializable {
         this.dislikes = dislikes;
     }
 
+    /**
+     *
+     * @return
+     */
+    public static int getNextId() {
+        return nextId;
+    }
+
+    /**
+     *
+     * @param nextId
+     */
+    public static void setNextId(int nextId) {
+        Theme.nextId = nextId;
+    }
+
     @Override
     public String toString() {
         return "Theme{" + "id=" + id + ", subforum=" + subforum + ", title=" + title + ", type=" + type + ", author=" + author + ", comments=" + comments + ", content=" + content + ", dateOfCreating=" + dateOfCreating + ", likes=" + likes + ", dislikes=" + dislikes + '}';

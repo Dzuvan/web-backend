@@ -195,9 +195,7 @@ public class SubforumController {
     @Path("/subforums/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSubforum(@PathParam("id") int id) {
-        System.out.println("Here " + id);
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
-        System.out.println(subforum.getName());
         if (subforum.getId() != 0) {
             SubforumServiceImpl.getInstance().delete(subforum);
             return Response.status(Response.Status.OK)

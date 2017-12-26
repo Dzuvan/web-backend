@@ -173,9 +173,24 @@ public class Subforum implements Serializable {
         this.moderators = moderators;
     }
 
+    /**
+     *
+     * @return
+     */
+    public static int getNextId() {
+        return nextId;
+    }
+
+    /**
+     *
+     * @param nextId
+     */
+    public static void setNextId(int nextId) {
+        Subforum.nextId = nextId;
+    }
+
     @Override
     public String toString() {
         return "Subforum{" + "id=" + id + ", name=" + name + ", description=" + description + ", icon=" + icon + ", rules=" + rules + ", responsibleModerator=" + responsibleModerator + ", moderators=" + moderators + '}';
     }
-
 }

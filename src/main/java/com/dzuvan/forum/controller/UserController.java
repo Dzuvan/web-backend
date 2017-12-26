@@ -224,10 +224,10 @@ public class UserController {
     @Path("/users/{id}")
     public Response options(@PathParam("id") int id) {
         return Response.ok(id)
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .build();
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
     }
 }

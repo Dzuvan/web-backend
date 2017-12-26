@@ -80,10 +80,16 @@ public class UserServiceImpl implements UserService {
 
         if (foundUser != null) {
             users.remove(foundUser);
-            users.stream().filter((u) -> (u.getId() > foundUser.getId())).forEachOrdered((u) -> {
-                int i = u.getId();
-                u.setId(i--);
-            });
+            for (UserModel s : users) {
+                if (s.getId() > foundUser.getId()) {
+                    UserModel.setNextId(UserModel.getNextId() - 1);
+                    s.setId(s.getId() - 1);
+                }
+            }
+            users.remove(foundUser);
+            if (users.isEmpty()) {
+                UserModel.setNextId(1);
+            }
             saveUserList(users);
         }
     }

@@ -79,11 +79,16 @@ public class SubforumServiceImpl implements SubforumService {
                 .findFirst()
                 .orElse(null);
         if (foundSubforum != null) {
-            subforums.stream().filter((s) -> (s.getId() > foundSubforum.getId())).forEachOrdered((s) -> {
-                int i = s.getId();
-                s.setId(i--);
-            });
+            for (Subforum s : subforums) {
+                if (s.getId() > foundSubforum.getId()) {
+                    Subforum.setNextId(Subforum.getNextId() - 1);
+                    s.setId(s.getId() - 1);
+                }
+            }
             subforums.remove(foundSubforum);
+            if (subforums.isEmpty()) {
+                Subforum.setNextId(1);
+            }
             saveSubforumList(subforums);
         }
     }
