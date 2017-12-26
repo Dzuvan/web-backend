@@ -21,11 +21,8 @@ import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.model.UserModel;
 import com.dzuvan.forum.service.SubforumServiceImpl;
 import com.dzuvan.forum.service.UserServiceImpl;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.dzuvan.util.Serializer;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -61,6 +58,7 @@ public class SubforumController {
                 .entity(subforums)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
                 .allow("OPTIONS")
                 .build();
     }
@@ -71,15 +69,16 @@ public class SubforumController {
      * @return
      */
     @GET
-    @Path("/subforums/subforum/{id}")
+    @Path("/subforums/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSubforumById(@PathParam("id") Integer id) {
+    public Response getSubforumById(@PathParam("id") int id) {
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
         if (subforum != null) {
             return Response.ok()
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -93,7 +92,7 @@ public class SubforumController {
      * @return
      */
     @GET
-    @Path("/subforums/{name}")
+    @Path("/subforums/subforum/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSubforumByName(@PathParam("name") String name) {
         Subforum subforum = SubforumServiceImpl.getInstance().getByString(name);
@@ -103,6 +102,7 @@ public class SubforumController {
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -117,7 +117,6 @@ public class SubforumController {
      * @param file
      * @param rules
      * @param fileData
-     * @param id
      * @return
      */
     @POST
@@ -134,12 +133,13 @@ public class SubforumController {
          UserModel sender = UserServiceImpl.getInstance().getById(2);
          if (sender.getRole() == Role.MODERATOR || sender.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, fileData.getFileName(), sender);
-            writeToFile(file, location);
+            Serializer.writeToFile(file, location);
             SubforumServiceImpl.getInstance().addOne(subforum);
             return Response.status(Response.Status.OK)
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -166,7 +166,7 @@ public class SubforumController {
             @FormDataParam("rules") String rules,
             @FormDataParam("icon") InputStream file,
             @FormDataParam("icon") FormDataContentDisposition fileData,
-            @FormDataParam("moderator") Integer id) {
+            @FormDataParam("moderator") int id) {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
         UserModel sentUser = UserServiceImpl.getInstance().getById(id);
@@ -178,6 +178,7 @@ public class SubforumController {
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -193,14 +194,17 @@ public class SubforumController {
     @DELETE
     @Path("/subforums/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteSubforum(@PathParam("id") Integer id) {
+    public Response deleteSubforum(@PathParam("id") int id) {
+        System.out.println("Here " + id);
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
+        System.out.println(subforum.getName());
         if (subforum.getId() != 0) {
             SubforumServiceImpl.getInstance().delete(subforum);
             return Response.status(Response.Status.OK)
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -208,31 +212,14 @@ public class SubforumController {
         }
     }
 
-    /**
-     * Vrlo moguće da je suvišno.
-     *
-     * @return
-     */
     @OPTIONS
-    @Path("/users")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getSupportedOperations() {
-        return "<operations>GET, PUT, POST, DELETE</operations>";
-    }
-
-    private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
-        try {
-            OutputStream out;
-            int read;
-            byte[] bytes = new byte[10240];
-
-            out = new FileOutputStream(new File(uploadedFileLocation));
-            while ((read = uploadedInputStream.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-        }
+    @Path("/subforums/{id}")
+    public Response options(@PathParam("id") int id) {
+        return Response.ok(id)
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+            .header("Access-Control-Allow-Credentials", "true")
+            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+            .build();
     }
 }

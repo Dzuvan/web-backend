@@ -79,11 +79,11 @@ public class SubforumServiceImpl implements SubforumService {
                 .findFirst()
                 .orElse(null);
         if (foundSubforum != null) {
-            subforums.remove(foundSubforum);
             subforums.stream().filter((s) -> (s.getId() > foundSubforum.getId())).forEachOrdered((s) -> {
                 int i = s.getId();
                 s.setId(i--);
             });
+            subforums.remove(foundSubforum);
             saveSubforumList(subforums);
         }
     }
@@ -123,6 +123,9 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public ArrayList<Subforum> getAll() {
+        subforums.forEach((s) -> {
+            System.out.println(s.getId());
+        });
         return subforums;
     }
 

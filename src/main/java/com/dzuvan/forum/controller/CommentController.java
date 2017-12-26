@@ -183,12 +183,23 @@ public class CommentController {
     public Response deleteComment(@PathParam("id") Integer id) {
         Comment comment = CommentServiceImpl.getInstance().getById(id);
         CommentServiceImpl.getInstance().delete(comment);
-        
+
         return Response.status(Response.Status.OK)
                 .entity(comment)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
                 .allow("OPTIONS")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("/comments/{id}")
+    public Response options(@PathParam("id") int id) {
+        return Response.ok(id)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
                 .build();
     }
 }

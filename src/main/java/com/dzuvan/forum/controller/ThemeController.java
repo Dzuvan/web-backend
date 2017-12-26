@@ -21,13 +21,9 @@ import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.model.Theme;
 import com.dzuvan.forum.model.ThemeType;
 import com.dzuvan.forum.model.UserModel;
-import com.dzuvan.forum.service.SubforumServiceImpl;
 import com.dzuvan.forum.service.ThemeServiceImpl;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.dzuvan.util.Serializer;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
@@ -108,17 +104,6 @@ public class ThemeController {
             }
     }
 
-    /**
-     *Vrlo moguće da je suvišno.
-     * @return dozvoljene operacije za CRUD, jer CORS pravi problem.
-     */
-    @OPTIONS
-    @Path("/themes")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getSupportedOperations () {
-    return "<operations>GET, PUT, POST, DELETE</operations>";
-    }
-
     @POST
     @Path("/themes")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -137,7 +122,7 @@ public class ThemeController {
         Theme theme= new Theme(subforum,title,type, author, comments, location,
                 LocalDate.now(), likes, dislikes);
 
-        writeToFile(file, location);
+        Serializer.writeToFile(file, location);
         if (theme.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity(theme)
@@ -173,7 +158,7 @@ public class ThemeController {
         String location = System.getProperty("user.dir") + fileData.getFileName();
         Theme theme= new Theme(subforum,title,type, author, comments, location,
                 LocalDate.now(), likes, dislikes);
-        writeToFile(file, location);
+        Serializer.writeToFile(file, location);
 
         if(theme.getId() == 0){
             return Response.status(Response.Status.NO_CONTENT)
@@ -217,21 +202,18 @@ public class ThemeController {
         }
             
     }
-
-    private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
-		try {
-			OutputStream out;
-			int read;
-			byte[] bytes = new byte[10240];
-
-			out = new FileOutputStream(new File(uploadedFileLocation));
-			while ((read = uploadedInputStream.read(bytes)) != -1) {
-				out.write(bytes, 0, read);
-			}
-			out.flush();
-			out.close();
-		} catch (IOException e) {}
-        
-	}
+    
+    @OPTIONS
+    @Path("/themes/{id}")
+    public Response options(@PathParam("id") int id) {
+        return Response.ok(id)
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+            .header("Access-Control-Allow-Credentials", "true")
+            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+            .build();
+    }
+    
+  
  
 }

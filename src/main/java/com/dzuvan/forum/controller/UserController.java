@@ -68,7 +68,7 @@ public class UserController {
     @GET
     @Path("/users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserById(@PathParam("id") Integer id) {
+    public Response getUserById(@PathParam("id") int id) {
         UserModel user = UserServiceImpl.getInstance().getById(id);
         return Response.ok()
                 .entity(user)
@@ -175,7 +175,7 @@ public class UserController {
     @DELETE
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Integer id) {
+    public Response deleteUser(@PathParam("id") int id) {
 
         UserModel user = UserServiceImpl.getInstance().getById(id);
         if (id != 0) {
@@ -203,7 +203,7 @@ public class UserController {
     public Response login(@FormParam("username") String username,
             @FormParam("password") String password) {
         UserModel user = UserServiceImpl.getInstance().getByString(username);
-        if (user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(password)) {
             return Response.ok()
                     .entity(user)
                     .header("Access-Control-Allow-Origin", "*")
@@ -220,15 +220,14 @@ public class UserController {
         }
     }
 
-    /**
-     * Vrlo moguće da je suvišno.
-     *
-     * @return
-     */
     @OPTIONS
-    @Path("/users")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getSupportedOperations() {
-        return "<operations>GET, PUT, POST, DELETE</operations>";
+    @Path("/users/{id}")
+    public Response options(@PathParam("id") int id) {
+        return Response.ok(id)
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+            .header("Access-Control-Allow-Credentials", "true")
+            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+            .build();
     }
 }
