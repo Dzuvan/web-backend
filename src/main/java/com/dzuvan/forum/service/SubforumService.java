@@ -43,19 +43,18 @@ public interface SubforumService {
      * @param id
      * @return
      */
-    Subforum getById(Integer id);
+    Subforum getById(int id);
 
     /**
      *
      * @param o
      * @param id
      */
-    void edit(Subforum o, Integer id);
+    void edit(Subforum o, int id);
 
     /**
      *
      * @param o
-     * @return
      */
     void addOne(Subforum o);
 

@@ -154,11 +154,12 @@ public class SubforumController {
      * @param rules
      * @param file
      * @param fileData
+     * @param moderatorId
      * @param id
      * @return
      */
     @PUT
-    @Path("/subforums")
+    @Path("/subforums/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response updateSubforum(@FormDataParam("name") String name,
@@ -166,14 +167,16 @@ public class SubforumController {
             @FormDataParam("rules") String rules,
             @FormDataParam("icon") InputStream file,
             @FormDataParam("icon") FormDataContentDisposition fileData,
-            @FormDataParam("moderator") int id) {
+            @FormDataParam("moderatorId") int moderatorId,
+            @PathParam("id")int id) {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        UserModel sentUser = UserServiceImpl.getInstance().getById(id);
+        UserModel sentUser = UserServiceImpl.getInstance().getById(moderatorId);
+        System.out.println(sentUser.getFirstName());
         if (sentUser.getRole() == Role.MODERATOR || sentUser.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, location, sentUser);
 
-            SubforumServiceImpl.getInstance().edit(subforum, subforum.getId());
+            SubforumServiceImpl.getInstance().edit(subforum, id);
             return Response.status(Response.Status.OK)
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")

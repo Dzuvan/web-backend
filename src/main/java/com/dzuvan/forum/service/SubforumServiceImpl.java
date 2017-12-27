@@ -102,7 +102,7 @@ public class SubforumServiceImpl implements SubforumService {
     }
 
     @Override
-    public Subforum getById(Integer id) {
+    public Subforum getById(int id) {
         Subforum foundSubforum;
         foundSubforum = subforums.stream().filter(s -> s.getId() == id)
                 .findFirst()
@@ -111,10 +111,7 @@ public class SubforumServiceImpl implements SubforumService {
     }
 
     @Override
-    public void edit(Subforum subforum, Integer id) {
-        subforum = subforums.stream().filter(s -> s.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public void edit(Subforum subforum, int id) {
         if (subforum != null) {
             subforums.set(id, subforum);
             saveSubforumList(subforums);

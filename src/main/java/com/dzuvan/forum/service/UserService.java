@@ -42,14 +42,14 @@ public interface UserService {
      * @param id
      * @return
      */
-    UserModel getById(Integer id);
+    UserModel getById(int id);
 
     /**
      *
      * @param user
      * @param id
      */
-    void edit(UserModel user, Integer id);
+    void edit(UserModel user, int id);
 
     /**
      *

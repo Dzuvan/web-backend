@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel getById(Integer id) {
+    public UserModel getById(int id) {
         UserModel foundUser;
         foundUser = users.stream().filter(u -> (u.getId() == id))
                 .findFirst()
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void edit(UserModel user, Integer id) {
+    public void edit(UserModel user, int id) {
         UserModel foundUser = users.stream().filter(u -> (u.getId() == id))
                 .findAny()
                 .orElse(null);
