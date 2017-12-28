@@ -112,10 +112,10 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public void edit(Subforum subforum, int id) {
-        if (subforum != null) {
-            subforums.set(id, subforum);
-            saveSubforumList(subforums);
-        }
+        Subforum s = SubforumServiceImpl.getInstance().getById(id);
+        int index = subforums.indexOf(s);
+        subforums.set(index, subforum);
+        saveSubforumList(subforums);
     }
 
     @Override
@@ -125,9 +125,6 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public ArrayList<Subforum> getAll() {
-        subforums.forEach((s) -> {
-            System.out.println(s.getId());
-        });
         return subforums;
     }
 

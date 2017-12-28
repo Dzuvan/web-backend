@@ -172,7 +172,6 @@ public class SubforumController {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
         UserModel sentUser = UserServiceImpl.getInstance().getById(moderatorId);
-        System.out.println(sentUser.getFirstName());
         if (sentUser.getRole() == Role.MODERATOR || sentUser.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, location, sentUser);
 
