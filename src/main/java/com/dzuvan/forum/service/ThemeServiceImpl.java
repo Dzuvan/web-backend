@@ -83,7 +83,7 @@ public class ThemeServiceImpl implements ThemeService {
         if (foundTheme != null) {
             for (Theme s : themes) {
                 if (s.getId() > foundTheme.getId()) {
-                    Theme.setNextId(Subforum.getNextId() - 1);
+                    //Theme.setNextId(Subforum.getNextId() - 1);
                     s.setId(s.getId() - 1);
                 }
             }

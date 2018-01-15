@@ -19,6 +19,7 @@ package com.dzuvan.forum.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -27,9 +28,9 @@ import java.util.List;
 public class Subforum implements Serializable {
 
     private static final long serialVersionUID = 3261045213287698581L;
-    private static int nextId = 1;
+    public static AtomicLong nextId = new AtomicLong();
 
-    private int id;
+    private long id;
     private String name;
     private String description;
     private String icon;
@@ -38,8 +39,7 @@ public class Subforum implements Serializable {
     private List<Integer> moderators;
 
     public Subforum() {
-        id = nextId;
-        nextId++;
+
     }
 
     /**
@@ -52,20 +52,20 @@ public class Subforum implements Serializable {
      */
     public Subforum(String name, String description, String rules,
             String icon, UserModel responsibleModerator) {
-        this();
         this.name = name;
         this.description = description;
         this.rules = rules;
         this.icon = icon;
         this.moderators = new ArrayList<>();
         this.responsibleModerator = responsibleModerator;
+        this.id = nextId.incrementAndGet();
     }
 
     /**
      *
      * @return
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -73,7 +73,7 @@ public class Subforum implements Serializable {
      *
      * @param id
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -171,22 +171,6 @@ public class Subforum implements Serializable {
      */
     public void setModerators(List<Integer> moderators) {
         this.moderators = moderators;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static int getNextId() {
-        return nextId;
-    }
-
-    /**
-     *
-     * @param nextId
-     */
-    public static void setNextId(int nextId) {
-        Subforum.nextId = nextId;
     }
 
     @Override

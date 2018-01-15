@@ -198,7 +198,7 @@ public class SubforumController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSubforum(@PathParam("id") int id) {
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
-        if (subforum.getId() != 0) {
+//        if (subforum.getId() != 0) {
             SubforumServiceImpl.getInstance().delete(subforum);
             return Response.status(Response.Status.OK)
                     .entity(subforum)
@@ -207,9 +207,9 @@ public class SubforumController {
                     .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
-        } else {
-            return Response.status(404).entity(subforum).build();
-        }
+//        } else {
+//            return Response.status(404).entity(subforum).build();
+//        }
     }
 
     @OPTIONS

@@ -79,15 +79,15 @@ public class SubforumServiceImpl implements SubforumService {
                 .findFirst()
                 .orElse(null);
         if (foundSubforum != null) {
+            subforums.remove(foundSubforum);
             for (Subforum s : subforums) {
                 if (s.getId() > foundSubforum.getId()) {
-                    Subforum.setNextId(Subforum.getNextId() - 1);
-                    s.setId(s.getId() - 1);
+                    s.setId(Subforum.nextId.decrementAndGet());
                 }
             }
-            subforums.remove(foundSubforum);
+            Subforum.nextId.decrementAndGet();
             if (subforums.isEmpty()) {
-                Subforum.setNextId(1);
+                Subforum.nextId.getAndSet(0);
             }
             saveSubforumList(subforums);
         }
@@ -102,20 +102,22 @@ public class SubforumServiceImpl implements SubforumService {
     }
 
     @Override
-    public Subforum getById(int id) {
+    public Subforum getById(long id) {
         Subforum foundSubforum;
         foundSubforum = subforums.stream().filter(s -> s.getId() == id)
-                .findFirst()
+                .findAny()
                 .orElse(null);
         return foundSubforum;
     }
 
     @Override
-    public void edit(Subforum subforum, int id) {
+    public void edit(Subforum subforum, long id) {
         Subforum s = SubforumServiceImpl.getInstance().getById(id);
-        int index = subforums.indexOf(s);
-        subforums.set(index, subforum);
-        saveSubforumList(subforums);
+        if (s.getId() == subforum.getId()) {
+            int index = subforums.indexOf(s);
+            subforums.set(index, subforum);
+            saveSubforumList(subforums);
+        }
     }
 
     @Override
@@ -125,6 +127,9 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public ArrayList<Subforum> getAll() {
+        if (subforums.isEmpty()) {
+            initialiseSubforums();
+        }
         return subforums;
     }
 

@@ -43,14 +43,14 @@ public interface SubforumService {
      * @param id
      * @return
      */
-    Subforum getById(int id);
+    Subforum getById(long id);
 
     /**
      *
      * @param o
      * @param id
      */
-    void edit(Subforum o, int id);
+    void edit(Subforum o, long id);
 
     /**
      *
