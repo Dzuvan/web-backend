@@ -19,6 +19,7 @@ package com.dzuvan.forum.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -27,9 +28,9 @@ import java.util.ArrayList;
 public class UserModel implements Serializable {
 
     private static final long serialVersionUID = -4156591132476352712L;
-    private static int nextId = 1;
+    public static AtomicLong nextId = new AtomicLong();
 
-    private int id;
+    private long id;
     private String username;
     private String password;
     private String firstName;
@@ -46,8 +47,6 @@ public class UserModel implements Serializable {
      *
      */
     public UserModel() {
-        id = nextId;
-        nextId++;
     }
 
     /**
@@ -64,7 +63,6 @@ public class UserModel implements Serializable {
     public UserModel(String username, String password, String firstName,
             String lastName, Role role, String phone, String email,
             LocalDate registrationDate) {
-        this();
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -76,6 +74,7 @@ public class UserModel implements Serializable {
         this.followedThemes = new ArrayList<>();
         this.followedSubforums = new ArrayList<>();
         this.savedComments = new ArrayList<>();
+        this.id = nextId.incrementAndGet();
     }
 
     /**
@@ -130,7 +129,7 @@ public class UserModel implements Serializable {
      *
      * @return
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -138,7 +137,7 @@ public class UserModel implements Serializable {
      *
      * @param id
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -268,14 +267,6 @@ public class UserModel implements Serializable {
      */
     public void setSavedComments(ArrayList<Integer> savedComments) {
         this.savedComments = savedComments;
-    }
-
-    public static int getNextId() {
-        return nextId;
-    }
-
-    public static void setNextId(int nextId) {
-        UserModel.nextId = nextId;
     }
 
     @Override

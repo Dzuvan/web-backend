@@ -77,19 +77,28 @@ public class UserServiceImpl implements UserService {
         UserModel foundUser = users.stream().filter(u -> u.getUsername().equals(user.getUsername()))
                 .findFirst()
                 .orElse(null);
-
         if (foundUser != null) {
             users.remove(foundUser);
-            for (UserModel s : users) {
-                if (s.getId() > foundUser.getId()) {
-                    UserModel.setNextId(UserModel.getNextId() - 1);
-                    s.setId(s.getId() - 1);
+            for (UserModel u : users) {
+                if (u.getId() > foundUser.getId()) {
+                    u.setId(UserModel.nextId.decrementAndGet());
                 }
             }
-            users.remove(foundUser);
+            UserModel.nextId.decrementAndGet();
             if (users.isEmpty()) {
-                UserModel.setNextId(1);
+                UserModel.nextId.getAndSet(0);
             }
+            saveUserList(users);
+        }
+    }
+
+    @Override
+    public void edit(UserModel user, long id) {
+        UserModel u = getById(id);
+        if (u.getId() == user.getId()) {
+            int index = users.indexOf(u);
+            user.setId(u.getId());
+            users.set(index, user);
             saveUserList(users);
         }
     }
@@ -111,23 +120,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel getById(int id) {
+    public UserModel getById(long id) {
         UserModel foundUser;
         foundUser = users.stream().filter(u -> (u.getId() == id))
                 .findFirst()
                 .orElse(null);
         return foundUser;
-    }
-
-    @Override
-    public void edit(UserModel user, int id) {
-        UserModel foundUser = users.stream().filter(u -> (u.getId() == id))
-                .findAny()
-                .orElse(null);
-        if (foundUser != null) {
-            users.set(id, user);
-            saveUserList(users);
-        }
     }
 
     @Override
@@ -137,10 +135,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ArrayList<UserModel> getAll() {
+        if (users.isEmpty()) {
+            initialiseUsers();
+        }
         return users;
     }
 
     private void initialiseUsers() {
+
         users = new ArrayList<>();
 
         users.add(new UserModel("admin", "admin", "marko", "markovic",

@@ -19,6 +19,7 @@ package com.dzuvan.forum.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -27,9 +28,9 @@ import java.util.List;
 public class Theme implements Serializable {
 
     private static final long serialVersionUID = -9143705498330171960L;
-    private static int nextId = 1;
+    public static AtomicLong nextId = new AtomicLong();
 
-    private int id;
+    private long id;
     private Subforum subforum;
     private String title;
     private ThemeType type;
@@ -41,8 +42,6 @@ public class Theme implements Serializable {
     private int dislikes;
 
     public Theme() {
-        id = nextId;
-        nextId++;
     }
 
     /**
@@ -69,13 +68,14 @@ public class Theme implements Serializable {
         this.dateOfCreating = dateOfCreating;
         this.likes = likes;
         this.dislikes = dislikes;
+        this.id = nextId.incrementAndGet();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -223,25 +223,8 @@ public class Theme implements Serializable {
         this.dislikes = dislikes;
     }
 
-    /**
-     *
-     * @return
-     */
-    public static int getNextId() {
-        return nextId;
-    }
-
-    /**
-     *
-     * @param nextId
-     */
-    public static void setNextId(int nextId) {
-        Theme.nextId = nextId;
-    }
-
     @Override
     public String toString() {
         return "Theme{" + "id=" + id + ", subforum=" + subforum + ", title=" + title + ", type=" + type + ", author=" + author + ", comments=" + comments + ", content=" + content + ", dateOfCreating=" + dateOfCreating + ", likes=" + likes + ", dislikes=" + dislikes + '}';
     }
-
 }

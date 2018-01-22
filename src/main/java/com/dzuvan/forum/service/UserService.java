@@ -42,14 +42,14 @@ public interface UserService {
      * @param id
      * @return
      */
-    UserModel getById(int id);
+    UserModel getById(long id);
 
     /**
      *
      * @param user
      * @param id
      */
-    void edit(UserModel user, int id);
+    void edit(UserModel user, long id);
 
     /**
      *
@@ -61,5 +61,5 @@ public interface UserService {
      *
      * @return
      */
-    Iterable getAll();    
+    Iterable getAll();
 }

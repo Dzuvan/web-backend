@@ -112,9 +112,10 @@ public class SubforumServiceImpl implements SubforumService {
 
     @Override
     public void edit(Subforum subforum, long id) {
-        Subforum s = SubforumServiceImpl.getInstance().getById(id);
+        Subforum s = getById(id);
         if (s.getId() == subforum.getId()) {
             int index = subforums.indexOf(s);
+            subforum.setId(s.getId());
             subforums.set(index, subforum);
             saveSubforumList(subforums);
         }

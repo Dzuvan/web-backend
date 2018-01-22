@@ -81,15 +81,15 @@ public class ThemeServiceImpl implements ThemeService {
                 .findAny()
                 .orElse(null);
         if (foundTheme != null) {
+            themes.remove(foundTheme);
             for (Theme s : themes) {
                 if (s.getId() > foundTheme.getId()) {
-                    //Theme.setNextId(Subforum.getNextId() - 1);
-                    s.setId(s.getId() - 1);
+                    s.setId(Theme.nextId.decrementAndGet());
                 }
             }
-            themes.remove(foundTheme);
+            Theme.nextId.decrementAndGet();
             if (themes.isEmpty()) {
-                Theme.setNextId(1);
+                Theme.nextId.getAndSet(0);
             }
             saveThemeList(themes);
         }
@@ -104,7 +104,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Theme getById(Integer id) {
+    public Theme getById(long id) {
         Theme foundTheme = themes.stream().filter(t -> t.getId() == id)
                 .findAny()
                 .orElse(null);
@@ -113,12 +113,12 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void edit(Theme theme, Integer id) {
-        Theme foundTheme = themes.stream().filter(o -> o.getId() == (id))
-                .findAny()
-                .orElse(null);
-        if (foundTheme != null) {
-            themes.set(id, theme);
+    public void edit(Theme theme, long id) {
+        Theme t = getById(id);
+        if (t.getId() == theme.getId()) {
+            int index = themes.indexOf(t);
+            theme.setId(t.getId());
+            themes.set(index, theme);
             saveThemeList(themes);
         }
     }
@@ -130,15 +130,15 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public ArrayList<Theme> getAll() {
+        if (themes.isEmpty()) {
+            initialiseThemes();
+        }
         return themes;
     }
 
-    /**
-     * Test data for themes.
-     *
-     */
     private void initialiseThemes() {
         themes = new ArrayList<>();
+
         Subforum first = SubforumServiceImpl.getInstance().getById(1);
         UserModel one = UserServiceImpl.getInstance().getById(1);
 

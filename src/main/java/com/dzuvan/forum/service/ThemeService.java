@@ -42,19 +42,18 @@ public interface ThemeService {
      * @param id
      * @return
      */
-    Theme getById(Integer id);
+    Theme getById(long id);
 
     /**
      *
      * @param theme
      * @param id
      */
-    void edit(Theme theme, Integer id);
+    void edit(Theme theme, long id);
 
     /**
      *
      * @param theme
-     * @return
      */
     void addOne(Theme theme);
 
