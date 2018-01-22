@@ -55,6 +55,7 @@ public class UserController {
                 .entity(users)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .allow("OPTIONS")
                 .build();
     }
@@ -68,12 +69,13 @@ public class UserController {
     @GET
     @Path("/users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserById(@PathParam("id") int id) {
+    public Response getUserById(@PathParam("id") long id) {
         UserModel user = UserServiceImpl.getInstance().getById(id);
         return Response.ok()
                 .entity(user)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .allow("OPTIONS")
                 .build();
     }
@@ -94,6 +96,7 @@ public class UserController {
                     .entity(user)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -129,6 +132,7 @@ public class UserController {
                 .entity(user)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .allow("OPTIONS")
                 .build();
     }
@@ -142,10 +146,11 @@ public class UserController {
      * @param phone
      * @param email
      * @param role
+     * @param id
      * @return Response cuz CORS
      */
     @PUT
-    @Path("/users")
+    @Path("/users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response updateUser(@FormParam("username") String username,
@@ -154,15 +159,17 @@ public class UserController {
             @FormParam("lastName") String lastName,
             @FormParam("phone") String phone,
             @FormParam("email") String email,
-            @FormParam("role") Role role) {
+            @FormParam("role") Role role,
+            @PathParam("id") long id) {
         UserModel user = new UserModel(username, password, firstName, lastName,
                 role, phone, email, LocalDate.now());
 
-        UserServiceImpl.getInstance().edit(user, user.getId());
+        UserServiceImpl.getInstance().edit(user, id);
         return Response.status(Response.Status.OK)
                 .entity(user)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .allow("OPTIONS")
                 .build();
     }
@@ -175,19 +182,16 @@ public class UserController {
     @DELETE
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") int id) {
-
+    public Response deleteUser(@PathParam("id") long id) {
         UserModel user = UserServiceImpl.getInstance().getById(id);
-        if (id != 0) {
-            UserServiceImpl.getInstance().delete(user);
-            return Response.ok()
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        } else {
-            return Response.noContent().build();
-        }
+        UserServiceImpl.getInstance().delete(user);
+
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .allow("OPTIONS")
+                .build();
     }
 
     /**
@@ -201,13 +205,15 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(@FormParam("username") String username,
-            @FormParam("password") String password) {
+            @FormParam("password") String password
+    ) {
         UserModel user = UserServiceImpl.getInstance().getByString(username);
         if (user != null && user.getPassword().equals(password)) {
             return Response.ok()
                     .entity(user)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
         } else {
@@ -215,6 +221,7 @@ public class UserController {
                     .entity(user)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
         }
@@ -222,7 +229,7 @@ public class UserController {
 
     @OPTIONS
     @Path("/users/{id}")
-    public Response options(@PathParam("id") int id) {
+    public Response options(@PathParam("id") long id) {
         return Response.ok(id)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")

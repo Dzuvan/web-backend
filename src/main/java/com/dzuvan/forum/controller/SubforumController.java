@@ -130,8 +130,8 @@ public class SubforumController {
             @FormDataParam("icon") FormDataContentDisposition fileData) {
 
         String location = "/home/dzuvan/NetBeansProjects/front-end/dist/" + fileData.getFileName();
-         UserModel sender = UserServiceImpl.getInstance().getById(2);
-         if (sender.getRole() == Role.MODERATOR || sender.getRole() == Role.ADMINISTRATOR) {
+        UserModel sender = UserServiceImpl.getInstance().getById(2);
+        if (sender.getRole() == Role.MODERATOR || sender.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, fileData.getFileName(), sender);
             Serializer.writeToFile(file, location);
             SubforumServiceImpl.getInstance().addOne(subforum);
@@ -167,8 +167,8 @@ public class SubforumController {
             @FormDataParam("rules") String rules,
             @FormDataParam("icon") InputStream file,
             @FormDataParam("icon") FormDataContentDisposition fileData,
-            @FormDataParam("moderatorId") int moderatorId,
-            @PathParam("id")int id) {
+            @FormDataParam("moderatorId") long moderatorId,
+            @PathParam("id") long id) {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
         UserModel sentUser = UserServiceImpl.getInstance().getById(moderatorId);
@@ -198,28 +198,25 @@ public class SubforumController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSubforum(@PathParam("id") int id) {
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
-//        if (subforum.getId() != 0) {
-            SubforumServiceImpl.getInstance().delete(subforum);
-            return Response.status(Response.Status.OK)
-                    .entity(subforum)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
-                    .allow("OPTIONS")
-                    .build();
-//        } else {
-//            return Response.status(404).entity(subforum).build();
-//        }
+        SubforumServiceImpl.getInstance().delete(subforum);
+        
+        return Response.status(Response.Status.OK)
+                .entity(subforum)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .allow("OPTIONS")
+                .build();
     }
 
     @OPTIONS
     @Path("/subforums/{id}")
-    public Response options(@PathParam("id") int id) {
+    public Response options(@PathParam("id") long id) {
         return Response.ok(id)
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .build();
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
     }
 }

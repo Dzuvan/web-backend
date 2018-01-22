@@ -16,12 +16,13 @@
  */
 package com.dzuvan.forum.controller;
 
-import com.dzuvan.forum.model.Comment;
 import com.dzuvan.forum.model.Subforum;
 import com.dzuvan.forum.model.Theme;
 import com.dzuvan.forum.model.ThemeType;
 import com.dzuvan.forum.model.UserModel;
+import com.dzuvan.forum.service.SubforumServiceImpl;
 import com.dzuvan.forum.service.ThemeServiceImpl;
+import com.dzuvan.forum.service.UserServiceImpl;
 import com.dzuvan.util.Serializer;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -44,7 +45,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  *
  * @author dzuvan
  */
-
 @Path("/themeService")
 public class ThemeController {
 
@@ -57,31 +57,38 @@ public class ThemeController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllThemes() {
         ArrayList<Theme> themes = ThemeServiceImpl.getInstance().getAll();
-        return  Response.ok()
-                        .entity(themes)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
+        return Response.ok()
+                .entity(themes)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .allow("OPTIONS")
+                .build();
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GET
     @Path("/themes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getThemeById(@PathParam("id") Integer id) {
         Theme theme = ThemeServiceImpl.getInstance().getById(id);
         if (theme != null) {
-            return  Response.ok()
-                            .entity(theme)
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                            .allow("OPTIONS")
-                            .build();
-        }   else {
+            return Response.ok()
+                    .entity(theme)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                    .allow("OPTIONS")
+                    .build();
+        } else {
             return Response.noContent().build();
-            }
+        }
     }
-    
+
     /**
      *
      * @param title
@@ -93,33 +100,34 @@ public class ThemeController {
     public Response getThemeByTitle(@PathParam("title") String title) {
         Theme theme = ThemeServiceImpl.getInstance().getByString(title);
         if (theme != null) {
-            return  Response.ok()
-                            .entity(theme)
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                            .allow("OPTIONS")
-                            .build();
-        }   else {
+            return Response.ok()
+                    .entity(theme)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                    .allow("OPTIONS")
+                    .build();
+        } else {
             return Response.noContent().build();
-            }
+        }
     }
 
     @POST
     @Path("/themes")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addTheme(   @FormDataParam("title") String title,
-                                @FormDataParam("author") UserModel author,
-                                @FormDataParam("type") ThemeType type,
-                                @FormDataParam("subforum") Subforum subforum,
-                                @FormDataParam("comments") ArrayList<Comment> comments,
-                                @FormDataParam("content") InputStream file,
-                                @FormDataParam("content") FormDataContentDisposition fileData,
-                                @FormDataParam("likes") Integer likes, 
-                                @FormDataParam("dislikes") Integer dislikes) {
-
+    public Response addTheme(@FormDataParam("title") String title,
+            @FormDataParam("author") long authorId,
+            @FormDataParam("type") ThemeType type,
+            @FormDataParam("subforum") long subforumId,
+            @FormDataParam("content") InputStream file,
+            @FormDataParam("content") FormDataContentDisposition fileData,
+            @FormDataParam("likes") int likes,
+            @FormDataParam("dislikes") int dislikes) {
+        Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
+        UserModel author = UserServiceImpl.getInstance().getById(authorId);
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        Theme theme= new Theme(subforum,title,type, author, comments, location,
+        Theme theme = new Theme(subforum, title, type, author, null, location,
                 LocalDate.now(), likes, dislikes);
 
         Serializer.writeToFile(file, location);
@@ -128,92 +136,86 @@ public class ThemeController {
                     .entity(theme)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
-        }   else {
+        } else {
             ThemeServiceImpl.getInstance().addOne(theme);
-            return  Response.status(Response.Status.CREATED)
-                        .entity(theme)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                        .allow("OPTIONS")
-                        .build();
-            }
+            return Response.status(Response.Status.CREATED)
+                    .entity(theme)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                    .allow("OPTIONS")
+                    .build();
+        }
     }
 
     @PUT
-    @Path("/themes")
+    @Path("/themes/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editTheme(  @FormDataParam("title") String title,
-                                @FormDataParam("author") UserModel author,
-                                @FormDataParam("type") ThemeType type,
-                                @FormDataParam("subforum") Subforum subforum,
-                                @FormDataParam("comments") ArrayList<Comment> comments,
-                                @FormDataParam("content") InputStream file,
-                                @FormDataParam("content") FormDataContentDisposition fileData,
-                                @FormDataParam("likes") Integer likes, 
-                                @FormDataParam("dislikes") Integer dislikes) {
+    public Response updateTheme(@FormDataParam("title") String title,
+            @FormDataParam("author") long authorId,
+            @FormDataParam("type") ThemeType type,
+            @FormDataParam("subforum") long subforumId,
+            @FormDataParam("content") InputStream file,
+            @FormDataParam("content") FormDataContentDisposition fileData,
+            @FormDataParam("likes") int likes,
+            @FormDataParam("dislikes") int dislikes,
+            @PathParam("id") long id) {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        Theme theme= new Theme(subforum,title,type, author, comments, location,
+        // TODO(Jovan): Fix constructor.
+        Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
+        UserModel author = UserServiceImpl.getInstance().getById(authorId);
+        Theme theme = new Theme(subforum, title, type, author, null, location,
                 LocalDate.now(), likes, dislikes);
         Serializer.writeToFile(file, location);
 
-        if(theme.getId() == 0){
+        if (theme.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity(subforum)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
-        }   else {
-            ThemeServiceImpl.getInstance().edit(theme, theme.getId()); // fishy
-            return  Response.status(Response.Status.CREATED)
+        } else {
+            ThemeServiceImpl.getInstance().edit(theme, id);
+            return Response.status(Response.Status.CREATED)
                     .entity(theme)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                     .allow("OPTIONS")
                     .build();
-            }
         }
+    }
 
     @DELETE
     @Path("/themes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteTheme(@PathParam("id") Integer id) {
-        Theme theme= ThemeServiceImpl.getInstance().getById(id);
-
-        if(theme.getId() == 0) {
-            return Response.status(Response.Status.NO_CONTENT)
-                    .entity(theme)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        }   else {
-            ThemeServiceImpl.getInstance().delete(theme);
-            return Response.status(Response.Status.OK)
-                    .entity(theme)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                    .allow("OPTIONS")
-                    .build();
-        }
-            
+    public Response deleteTheme(@PathParam("id") long id) {
+        Theme theme = ThemeServiceImpl.getInstance().getById(id);
+        ThemeServiceImpl.getInstance().delete(theme);
+        return Response.status(Response.Status.OK)
+                .entity(theme)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .allow("OPTIONS")
+                .build();
     }
-    
+
     @OPTIONS
     @Path("/themes/{id}")
-    public Response options(@PathParam("id") int id) {
+    public Response options(@PathParam("id") long id) {
         return Response.ok(id)
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .build();
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
     }
-    
-  
- 
 }
