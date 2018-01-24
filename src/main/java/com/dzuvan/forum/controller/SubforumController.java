@@ -174,7 +174,7 @@ public class SubforumController {
         UserModel sentUser = UserServiceImpl.getInstance().getById(moderatorId);
         if (sentUser.getRole() == Role.MODERATOR || sentUser.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, location, sentUser);
-
+            subforum.setId(id);
             SubforumServiceImpl.getInstance().edit(subforum, id);
             return Response.status(Response.Status.OK)
                     .entity(subforum)

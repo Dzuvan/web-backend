@@ -57,9 +57,9 @@ public class ThemeController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllThemes() {
         ArrayList<Theme> themes = ThemeServiceImpl.getInstance().getAll();
+        System.out.println(themes);
         return Response.ok()
                 .entity(themes)
-                .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
                 .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .allow("OPTIONS")
@@ -212,6 +212,17 @@ public class ThemeController {
     @Path("/themes/{id}")
     public Response options(@PathParam("id") long id) {
         return Response.ok(id)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("/themes")
+    public Response options() {
+        return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .header("Access-Control-Allow-Credentials", "true")

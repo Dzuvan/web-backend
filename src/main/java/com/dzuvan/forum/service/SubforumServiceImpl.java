@@ -115,7 +115,6 @@ public class SubforumServiceImpl implements SubforumService {
         Subforum s = getById(id);
         if (s.getId() == subforum.getId()) {
             int index = subforums.indexOf(s);
-            subforum.setId(s.getId());
             subforums.set(index, subforum);
             saveSubforumList(subforums);
         }
