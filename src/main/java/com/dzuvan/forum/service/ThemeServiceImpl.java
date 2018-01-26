@@ -142,9 +142,9 @@ public class ThemeServiceImpl implements ThemeService {
         Subforum first = SubforumServiceImpl.getInstance().getById(1);
         UserModel one = UserServiceImpl.getInstance().getById(1);
 
-        themes.add(new Theme(first, "First Theme", ThemeType.TEXT, one, null, "Jedan", LocalDate.of(2018, 1, 2), 0, 0));
-        themes.add(new Theme(first, "Second theme", ThemeType.TEXT, one, null, "tototot", LocalDate.of(2017, 8, 8), 5, 5));
-        themes.add(new Theme(first, "Third theme", ThemeType.TEXT, one, null, "ajajajaj", LocalDate.of(2017, 8, 8), 0, 5));
+        themes.add(new Theme(first, "First Theme", ThemeType.TEXT, one, "Jedan", LocalDate.of(2018, 1, 2)));
+        themes.add(new Theme(first, "Second theme", ThemeType.TEXT, one, "tototot", LocalDate.of(2017, 8, 8)));
+        themes.add(new Theme(first, "Third theme", ThemeType.TEXT, one, "ajajajaj", LocalDate.of(2017, 8, 8)));
 
         try {
             File file = new File(DIRECTORY, FILENAME);

@@ -33,5 +33,6 @@ public enum ThemeType {
     /**
      *
      */
-    LINK
+    LINK;
+
 }

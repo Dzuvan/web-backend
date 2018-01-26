@@ -18,6 +18,7 @@ package com.dzuvan.forum.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -50,24 +51,20 @@ public class Theme implements Serializable {
      * @param title
      * @param type
      * @param author
-     * @param comments
      * @param content
      * @param dateOfCreating
-     * @param likes
-     * @param dislikes
      */
     public Theme(Subforum subforum, String title, ThemeType type,
-            UserModel author, List<Comment> comments, String content,
-            LocalDate dateOfCreating, int likes, int dislikes) {
+            UserModel author, String content, LocalDate dateOfCreating) {
         this.subforum = subforum;
         this.title = title;
         this.type = type;
         this.author = author;
-        this.comments = comments;
+        this.comments = new ArrayList<>();
         this.content = content;
         this.dateOfCreating = dateOfCreating;
-        this.likes = likes;
-        this.dislikes = dislikes;
+        this.likes = 0;
+        this.dislikes = 0;
         this.id = nextId.incrementAndGet();
     }
 

@@ -118,17 +118,15 @@ public class ThemeController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addTheme(@FormDataParam("title") String title,
             @FormDataParam("author") long authorId,
-            @FormDataParam("type") ThemeType type,
+            @FormDataParam("type") String type,
             @FormDataParam("subforum") long subforumId,
             @FormDataParam("content") InputStream file,
-            @FormDataParam("content") FormDataContentDisposition fileData,
-            @FormDataParam("likes") int likes,
-            @FormDataParam("dislikes") int dislikes) {
+            @FormDataParam("content") FormDataContentDisposition fileData) {
         Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
         UserModel author = UserServiceImpl.getInstance().getById(authorId);
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        Theme theme = new Theme(subforum, title, type, author, null, location,
-                LocalDate.now(), likes, dislikes);
+        //TODO(Jovan): Viđi može li se izbeći ovaj kurac s tipm teme.
+        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, location, LocalDate.now());
 
         Serializer.writeToFile(file, location);
         if (theme.getId() == 0) {
@@ -157,7 +155,7 @@ public class ThemeController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTheme(@FormDataParam("title") String title,
             @FormDataParam("author") long authorId,
-            @FormDataParam("type") ThemeType type,
+            @FormDataParam("type") String type,
             @FormDataParam("subforum") long subforumId,
             @FormDataParam("content") InputStream file,
             @FormDataParam("content") FormDataContentDisposition fileData,
@@ -166,11 +164,11 @@ public class ThemeController {
             @PathParam("id") long id) {
 
         String location = System.getProperty("user.dir") + fileData.getFileName();
-        // TODO(Jovan): Fix constructor.
         Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
         UserModel author = UserServiceImpl.getInstance().getById(authorId);
-        Theme theme = new Theme(subforum, title, type, author, null, location,
-                LocalDate.now(), likes, dislikes);
+        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, location, LocalDate.now());
+        theme.setLikes(likes);
+        theme.setDislikes(dislikes);
         Serializer.writeToFile(file, location);
 
         if (theme.getId() == 0) {
