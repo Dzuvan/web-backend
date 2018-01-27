@@ -22,6 +22,7 @@ import com.dzuvan.forum.model.UserModel;
 import com.dzuvan.forum.service.SubforumServiceImpl;
 import com.dzuvan.forum.service.UserServiceImpl;
 import com.dzuvan.util.Serializer;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
@@ -117,6 +118,7 @@ public class SubforumController {
      * @param file
      * @param rules
      * @param fileData
+     * @param sendId
      * @return
      */
     @POST
@@ -127,10 +129,11 @@ public class SubforumController {
             @FormDataParam("description") String description,
             @FormDataParam("rules") String rules,
             @FormDataParam("icon") InputStream file,
-            @FormDataParam("icon") FormDataContentDisposition fileData) {
+            @FormDataParam("icon") FormDataContentDisposition fileData,
+            @FormDataParam("seneder") long sendId) {
 
-        String location = "/home/dzuvan/NetBeansProjects/front-end/dist/" + fileData.getFileName();
-        UserModel sender = UserServiceImpl.getInstance().getById(2);
+        String location = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + fileData.getFileName();
+        UserModel sender = UserServiceImpl.getInstance().getById(sendId);
         if (sender.getRole() == Role.MODERATOR || sender.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, fileData.getFileName(), sender);
             Serializer.writeToFile(file, location);
@@ -198,7 +201,7 @@ public class SubforumController {
     public Response deleteSubforum(@PathParam("id") int id) {
         Subforum subforum = SubforumServiceImpl.getInstance().getById(id);
         SubforumServiceImpl.getInstance().delete(subforum);
-        
+
         return Response.status(Response.Status.OK)
                 .entity(subforum)
                 .header("Access-Control-Allow-Origin", "*")

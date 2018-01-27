@@ -24,6 +24,7 @@ import com.dzuvan.forum.service.SubforumServiceImpl;
 import com.dzuvan.forum.service.ThemeServiceImpl;
 import com.dzuvan.forum.service.UserServiceImpl;
 import com.dzuvan.util.Serializer;
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -122,13 +123,16 @@ public class ThemeController {
             @FormDataParam("subforum") long subforumId,
             @FormDataParam("content") InputStream file,
             @FormDataParam("content") FormDataContentDisposition fileData) {
+
+        String fileName = fileData.getName();
+        String location = System.getProperty("user.dir") + File.separator + "uploads" + File.separator;
+        Serializer.writeToFile(file, location);
+
         Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
         UserModel author = UserServiceImpl.getInstance().getById(authorId);
-        String location = System.getProperty("user.dir") + fileData.getFileName();
-        //TODO(Jovan): Viđi može li se izbeći ovaj kurac s tipm teme.
-        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, location, LocalDate.now());
 
-        Serializer.writeToFile(file, location);
+        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, fileName, LocalDate.now());
+
         if (theme.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity(theme)
@@ -163,13 +167,16 @@ public class ThemeController {
             @FormDataParam("dislikes") int dislikes,
             @PathParam("id") long id) {
 
-        String location = System.getProperty("user.dir") + fileData.getFileName();
+        String location = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + fileData.getFileName();
+        String fileName = fileData.getName();
+        Serializer.writeToFile(file, location);
+
         Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
         UserModel author = UserServiceImpl.getInstance().getById(authorId);
-        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, location, LocalDate.now());
+
+        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, fileName, LocalDate.now());
         theme.setLikes(likes);
         theme.setDislikes(dislikes);
-        Serializer.writeToFile(file, location);
 
         if (theme.getId() == 0) {
             return Response.status(Response.Status.NO_CONTENT)

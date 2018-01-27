@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class SubforumServiceImpl implements SubforumService {
 
     private static final String FILENAME = "subforums.dat";
-    private static final String DIRECTORY = System.getProperty("user.dir");
+    private static final String DIRECTORY = System.getProperty("user.dir")+ File.separator + "data" + File.separator;
 
     private static SubforumServiceImpl instance = null;
     private ArrayList<Subforum> subforums;
