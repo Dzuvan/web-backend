@@ -130,9 +130,10 @@ public class SubforumController {
             @FormDataParam("rules") String rules,
             @FormDataParam("icon") InputStream file,
             @FormDataParam("icon") FormDataContentDisposition fileData,
-            @FormDataParam("seneder") long sendId) {
+            @FormDataParam("sender") long sendId) {
 
-        String location = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + fileData.getFileName();
+        String location = System.getProperty("user.home") + File.separator + "uploads" + File.separator + fileData.getFileName();
+        System.out.println(location);
         UserModel sender = UserServiceImpl.getInstance().getById(sendId);
         if (sender.getRole() == Role.MODERATOR || sender.getRole() == Role.ADMINISTRATOR) {
             Subforum subforum = new Subforum(name, description, rules, fileData.getFileName(), sender);

@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public class ThemeServiceImpl implements ThemeService {
 
     private static final String FILENAME = "themes.dat";
-    private static final String DIRECTORY = System.getProperty("user.dir") + File.separator + "data" + File.separator;
+    private static final String DIRECTORY = System.getProperty("user.home") + File.separator + "data" + File.separator;
 
     private static ThemeServiceImpl instance = null;
     private ArrayList<Theme> themes;

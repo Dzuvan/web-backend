@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -58,9 +59,9 @@ public class ThemeController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllThemes() {
         ArrayList<Theme> themes = ThemeServiceImpl.getInstance().getAll();
-        System.out.println(themes);
         return Response.ok()
                 .entity(themes)
+                .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
                 .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
                 .allow("OPTIONS")
@@ -153,6 +154,41 @@ public class ThemeController {
         }
     }
 
+    @POST
+    @Path("/themes")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addTextTheme(@FormParam("title") String title,
+            @FormParam("author") long authorId,
+            @FormParam("type") String type,
+            @FormParam("subforum") long subforumId,
+            @FormParam("content") String content) {
+
+        Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
+        UserModel author = UserServiceImpl.getInstance().getById(authorId);
+        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, content, LocalDate.now());
+        ArrayList<Theme> themes = ThemeServiceImpl.getInstance().getAll();
+
+        if (theme.getId() == 0) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .entity(theme)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                    .allow("OPTIONS")
+                    .build();
+        } else {
+            ThemeServiceImpl.getInstance().addOne(theme);
+            return Response.status(Response.Status.CREATED)
+                    .entity(theme)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                    .allow("OPTIONS")
+                    .build();
+        }
+    }
+
     @PUT
     @Path("/themes/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -167,14 +203,14 @@ public class ThemeController {
             @FormDataParam("dislikes") int dislikes,
             @PathParam("id") long id) {
 
-        String location = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + fileData.getFileName();
+        String location = System.getProperty("user.home") + File.separator + "uploads" + File.separator + fileData.getFileName();
         String fileName = fileData.getName();
         Serializer.writeToFile(file, location);
 
         Subforum subforum = SubforumServiceImpl.getInstance().getById(subforumId);
         UserModel author = UserServiceImpl.getInstance().getById(authorId);
 
-        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, fileName, LocalDate.now());
+        Theme theme = new Theme(subforum, title, ThemeType.valueOf(type), author, location, LocalDate.now());
         theme.setLikes(likes);
         theme.setDislikes(dislikes);
 

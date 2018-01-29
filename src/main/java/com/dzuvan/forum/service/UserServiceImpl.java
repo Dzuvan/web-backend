@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class UserServiceImpl implements UserService {
 
     private static final String FILENAME = "users.dat";
-    private static final String DIRECTORY = System.getProperty("user.dir") + File.separator + "data" + File.separator;
+    private static final String DIRECTORY = System.getProperty("user.home") + File.separator + "data" + File.separator;
 
     private static UserServiceImpl instance = null;
     private ArrayList<UserModel> users;
